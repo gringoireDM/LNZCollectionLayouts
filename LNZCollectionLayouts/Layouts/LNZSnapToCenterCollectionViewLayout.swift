@@ -87,6 +87,9 @@ open class LNZSnapToCenterCollectionViewLayout: UICollectionViewLayout, FocusedC
     internal var headerHeight: CGFloat?
     internal var footerHeight: CGFloat?
     
+    internal var headerAttributes: UICollectionViewLayoutAttributes?
+    internal var footerAttributes: UICollectionViewLayoutAttributes?
+
     //MARK: - Layout implementation
     
     override open var collectionViewContentSize: CGSize {
@@ -158,6 +161,8 @@ open class LNZSnapToCenterCollectionViewLayout: UICollectionViewLayout, FocusedC
             headerAttributes = nil
             footerAttributes = nil
             
+            resetOffset = true
+            
             currentCollectionSize = collectionView?.bounds.size ?? .zero
         }
         super.invalidateLayout(with: context)
@@ -167,6 +172,8 @@ open class LNZSnapToCenterCollectionViewLayout: UICollectionViewLayout, FocusedC
     ///and there might be operations that in the prepare method we want to perform exclusively if the collection sie is changed.
     internal var currentCollectionSize: CGSize = .zero
     
+    internal var resetOffset: Bool = true
+    
     open override func prepare() {
         super.prepare()
         
@@ -175,10 +182,17 @@ open class LNZSnapToCenterCollectionViewLayout: UICollectionViewLayout, FocusedC
         
         sectionInsetLeft = centerFirstItem ? max(minimumSectionInsetLeft, collection.bounds.width/2.0 - itemSize.width/2.0) : minimumSectionInsetLeft
         sectionInsetRight = centerFirstItem ? max(minimumSectionInsetRight, sectionInsetLeft) : minimumSectionInsetRight
+        
+        if resetOffset {
+            resetOffset = false
+            
+            let currentInFocusXOffset = (itemSize.width + interitemSpacing) * CGFloat(currentInFocus)
+            
+            let proposedOffset = CGPoint(x: currentInFocusXOffset, y: -collection.contentInset.top)
+            collection.contentOffset = proposedOffset
+        }
     }
 
-    internal var headerAttributes: UICollectionViewLayoutAttributes?
-    internal var footerAttributes: UICollectionViewLayoutAttributes?
     open override func layoutAttributesForSupplementaryView(ofKind elementKind: String, at indexPath: IndexPath) -> UICollectionViewLayoutAttributes? {
         guard let collection = collectionView else { return nil }
         

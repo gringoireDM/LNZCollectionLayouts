@@ -61,7 +61,10 @@ open class LNZInfiniteCollectionViewLayout: LNZSnapToCenterCollectionViewLayout 
         }
         
         cycleStart = cycleSize!.width * 10000
-        let currentInFocusXOffset = cycleStart + (itemSize.width + interitemSpacing) * CGFloat(currentInFocus) - sectionInsetLeft
+        
+        //At this point the super already reset the content offset of the collection view to have centered the current in focus.
+        //we just have to shift all to go to cycleStart and remove the section inset
+        let currentInFocusXOffset = cycleStart + collection.contentOffset.x - sectionInsetLeft
         
         let proposedOffset = CGPoint(x: currentInFocusXOffset, y: -collection.contentInset.top)
         collection.contentOffset = proposedOffset
