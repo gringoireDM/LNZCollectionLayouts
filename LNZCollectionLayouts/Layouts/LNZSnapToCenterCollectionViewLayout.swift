@@ -8,51 +8,127 @@
 
 import UIKit
 
+public protocol FocusChangeDelegate: class {
+    func focusContainer(_ container: FocusedContaining, willChangeElement inFocus: Int, to newInFocus: Int)
+    func focusContainer(_ container: FocusedContaining, didChangeElement inFocus: Int)
+}
+
+public protocol FocusedContaining: class {
+    var currentInFocus: Int { get }
+    
+    weak var focusChangeDelegate: FocusChangeDelegate? { get set }
+}
+
+/**
+ This collection view layout is an horizontal layout that will allow pagination for items smaller than collection.
+ The element currently on the center is trackable with delegate pattern through the FocusChangeDelegate protocol.
+ 
+ This collectionView layout handles just one section, of homogeneus elements, therefore just one itemSize is allowed.
+ It handles header and footer where the height is specified by the UICollectionViewFlowLayout delegate methods
+ collectionView(_: layout: referenceSizeForHeaderInSection) and collectionView(_: layout: referenceSizeForFooterInSection)
+ */
 @IBDesignable
-open class LNZSnapToCenterCollectionViewLayout: UICollectionViewLayout {
+open class LNZSnapToCenterCollectionViewLayout: UICollectionViewLayout, FocusedContaining {
+    //MARK: Inspectable properties
+    
+    ///The spacing between consecutive items
     @IBInspectable public var interitemSpacing: CGFloat = 8
     
+    ///The space between the items and the top border of the collection view
     @IBInspectable public var sectionInsetTop: CGFloat = 8
+    
+    ///The space between the items and the bottom border of the collection view
     @IBInspectable public var sectionInsetBottom: CGFloat = 8
     
+    ///The minimum space from the left border and the first item of the collection view.
+    ///The real spacing will be determined in runtime and it will be computed to enforce the first item to be centered.
     @IBInspectable public var minimumSectionInsetLeft: CGFloat = 8
+    
+    ///The minimum space from the right border and the last item of the collection view.
+    ///The real spacing will be determined in runtime and it will be computed to enforce the last item to be centered.
     @IBInspectable public var minimumSectionInsetRight: CGFloat = 8
     
+    ///The size for each element in the collection
+    @IBInspectable public var itemSize: CGSize = CGSize(width: 100, height: 100)
+    
+    ///If this property is true, the left and right section spacing will be adapted to enforce the first and last element to be centered.
+    ///This property is true by default.
+    @IBInspectable public var centerFirstItem: Bool = true
+    
+    ///This property represents the actual section inset left calculated in order to have the first element of the collection centered.
     internal var sectionInsetLeft: CGFloat = 8
+    
+    ///This property represents the actual section inset right calculated in order to have the last element of the collection centered.
     internal var sectionInsetRight: CGFloat = 8
 
-    @IBInspectable public var itemSize: CGSize = CGSize(width: 100, height: 100)
-
-    internal var itemCount: Int = 0
-    public var currentInFocus: Int = 0
     
+    ///As in focus element is to be intended the element currently in the center, 
+    ///or the closest element to the center of the collection view.
+    ///- seeAlso: FocusedContaining
+    public internal(set) var currentInFocus: Int = 0 {
+        willSet {
+            focusChangeDelegate?.focusContainer(self, willChangeElement: currentInFocus, to: newValue)
+        }
+        didSet {
+            focusChangeDelegate?.focusContainer(self, didChangeElement: currentInFocus)
+        }
+    }
+    
+    /**
+     This delegate will be called every time the element currently in focus changes.
+     - seeAlso: FocusChangeDelegate
+     */
+    public weak var focusChangeDelegate: FocusChangeDelegate?
+    
+    //MARK: Cached properties
+    internal var itemCount: Int?
     internal var headerHeight: CGFloat?
     internal var footerHeight: CGFloat?
+    
+    //MARK: - Layout implementation
     
     override open var collectionViewContentSize: CGSize {
         guard let collection = collectionView else { return .zero }
         
-        let sections = collection.dataSource?.numberOfSections?(in: collection) ?? 0
-        guard sections < 2 else {
-            fatalError("\(self) is a collection View Layout that just supports one section")
+        //We can compute the size of the collectionView contentSize property by using the data source methods of the collectionView.dataSource
+        //All we need is the number of items in the section.
+        
+        //We want to query for the itemCount just once. If there is a value of itemCount, the layout ws not invalidated, therefore we should not query 
+        //the collectionView as we know that there are no changes.
+        if itemCount == nil {
+            let sections = collection.dataSource?.numberOfSections?(in: collection) ?? 0
+            guard sections < 2 else {
+                //This collection view layout can handle just one section.
+                fatalError("\(self) is a collection View Layout that just supports one section")
+            }
+
+            
+            itemCount = collection.dataSource?.collectionView(collection, numberOfItemsInSection: 0) ?? 0
         }
         
-        itemCount = collection.dataSource?.collectionView(collection, numberOfItemsInSection: 0) ?? 0
-        
+        //To compute the height we need to know if there are heders and footers.
         let delegate = collection.delegate as? UICollectionViewDelegateFlowLayout
         
-        headerHeight = delegate?.collectionView?(collection, layout: self, referenceSizeForHeaderInSection: 0).height
-        footerHeight = delegate?.collectionView?(collection, layout: self, referenceSizeForFooterInSection: 0).height
-
+        if headerHeight == nil {
+            headerHeight = delegate?.collectionView?(collection, layout: self, referenceSizeForHeaderInSection: 0).height ?? 0
+        }
         
-        let w = sectionInsetLeft + sectionInsetRight - interitemSpacing + (itemSize.width + interitemSpacing) * CGFloat(itemCount)
+        if footerHeight == nil {
+            footerHeight = delegate?.collectionView?(collection, layout: self, referenceSizeForFooterInSection: 0).height ?? 0
+        }
+        //This method is always called right after the prepare method, so at this point sectionInsetLeft + sectionInsetRight is already determined
+        let w = sectionInsetLeft + sectionInsetRight - interitemSpacing + (itemSize.width + interitemSpacing) * CGFloat(itemCount ?? 0)
         let h = (headerHeight ?? 0) + sectionInsetTop + sectionInsetBottom + itemSize.height + (footerHeight ?? 0)
         
         return CGSize(width: w, height: h)
     }
 
     open override func prepareForTransition(from oldLayout: UICollectionViewLayout) {
-        if let centerLayout = oldLayout as? LNZSnapToCenterCollectionViewLayout {
+        //This method will be called when this layout is applied to an existing collectionView with different layout.
+        //At this point the layout is still not changed for the collectionView, therefore we can query it to find out which would be the items that 
+        //we must display. If the layout is a FocusedContaining, then we want to give focus to the element currently in focus in the old layout.
+        //If this is not the case then we will assume that the focused item is the central one in the array of visible elements.
+        if let centerLayout = oldLayout as? FocusedContaining {
             currentInFocus = centerLayout.currentInFocus
         } else if let collection = oldLayout.collectionView {
             let visibleIndexes = collection.indexPathsForVisibleItems
@@ -62,14 +138,41 @@ open class LNZSnapToCenterCollectionViewLayout: UICollectionViewLayout {
         invalidateLayout()
     }
     
+    open override func invalidationContext(forBoundsChange newBounds: CGRect) -> UICollectionViewLayoutInvalidationContext {
+        let delta = CGSize(width: newBounds.width - currentCollectionSize.width, height: newBounds.height - currentCollectionSize.height)
+        
+        let context = UICollectionViewLayoutInvalidationContext()
+        context.contentSizeAdjustment = delta
+        return context
+    }
+    
+    open override func invalidateLayout(with context: UICollectionViewLayoutInvalidationContext) {
+        if context.invalidateEverything || context.invalidateDataSourceCounts || context.contentSizeAdjustment != .zero {
+            itemCount = nil
+            
+            headerHeight = nil
+            footerHeight = nil
+            
+            headerAttributes = nil
+            footerAttributes = nil
+            
+            currentCollectionSize = collectionView?.bounds.size ?? .zero
+        }
+        super.invalidateLayout(with: context)
+    }
+    
+    ///This property will track changes in the collection view size. The prepare method can be called multiple times even when the collection is scrolling
+    ///and there might be operations that in the prepare method we want to perform exclusively if the collection sie is changed.
+    internal var currentCollectionSize: CGSize = .zero
+    
     open override func prepare() {
         super.prepare()
         
         guard let collection = collectionView else { return }
         collection.decelerationRate = UIScrollViewDecelerationRateFast
         
-        sectionInsetLeft = max(minimumSectionInsetLeft, collection.bounds.width/2.0 - itemSize.width/2.0)
-        sectionInsetRight = max(minimumSectionInsetRight, sectionInsetLeft)
+        sectionInsetLeft = centerFirstItem ? max(minimumSectionInsetLeft, collection.bounds.width/2.0 - itemSize.width/2.0) : minimumSectionInsetLeft
+        sectionInsetRight = centerFirstItem ? max(minimumSectionInsetRight, sectionInsetLeft) : minimumSectionInsetRight
     }
 
     internal var headerAttributes: UICollectionViewLayoutAttributes?
@@ -102,6 +205,7 @@ open class LNZSnapToCenterCollectionViewLayout: UICollectionViewLayout {
     }
     
     internal func items(in rect: CGRect) -> [(index:IndexPath, frame: CGRect)] {
+        guard let itemCount = itemCount else { return [] }
         let firstIndex = max(Int(floor((rect.origin.x - sectionInsetLeft) / (itemSize.width + interitemSpacing))), 0)
         let lastIndex = min(Int(floor((rect.maxX - sectionInsetLeft) / (itemSize.width + interitemSpacing))), itemCount - 1)
         
@@ -124,7 +228,7 @@ open class LNZSnapToCenterCollectionViewLayout: UICollectionViewLayout {
     }
     
     open override func layoutAttributesForElements(in rect: CGRect) -> [UICollectionViewLayoutAttributes]? {
-        guard itemCount > 0 else { return nil }
+        guard let itemCount = itemCount, itemCount > 0 else { return nil }
         var result = [UICollectionViewLayoutAttributes]()
         for item in items(in: rect) {
             let indexPath = item.index

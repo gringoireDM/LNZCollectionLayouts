@@ -18,6 +18,7 @@ open class LNZInfiniteCollectionViewLayout: LNZSnapToCenterCollectionViewLayout 
     }
     
     internal var canInfiniteScroll: Bool {
+        guard let cycleSize = cycleSize else { return false }
         return cycleSize.width > (collectionView?.bounds.size.width ?? 0) * 1.5
     }
     
@@ -27,9 +28,8 @@ open class LNZInfiniteCollectionViewLayout: LNZSnapToCenterCollectionViewLayout 
         didSet { invalidateLayout() }
     }
     
-    private var cycleSize: CGSize = .zero
-    internal var currentCollectionSize: CGSize = .zero
-
+    private var cycleSize: CGSize?
+    
     open override func prepare() {
         super.prepare()
         
@@ -41,10 +41,13 @@ open class LNZInfiniteCollectionViewLayout: LNZSnapToCenterCollectionViewLayout 
         guard sections < 2 else {
             fatalError("\(self) is a collection View Layout that just supports one section")
         }
+        if itemCount == nil {
+            itemCount = collection.dataSource?.collectionView(collection, numberOfItemsInSection: 0) ?? 0
+        }
         
-        itemCount = collection.dataSource?.collectionView(collection, numberOfItemsInSection: 0) ?? 0
+        guard cycleSize == nil else { return }
         
-        let width = (itemSize.width + interitemSpacing) * CGFloat(itemCount)
+        let width = (itemSize.width + interitemSpacing) * CGFloat(itemCount ?? 0)
         let height = itemSize.height
         
         cycleSize = CGSize(width: width, height: height)
@@ -57,25 +60,31 @@ open class LNZInfiniteCollectionViewLayout: LNZSnapToCenterCollectionViewLayout 
             return
         }
         
-        if currentCollectionSize != collection.bounds.size {
-            
-            currentCollectionSize = collection.bounds.size
-            
-            cycleStart = cycleSize.width * 10000
-            let currentInFocusXOffset = cycleStart + (itemSize.width + interitemSpacing) * CGFloat(currentInFocus) - sectionInsetLeft
-            
-            let proposedOffset = CGPoint(x: currentInFocusXOffset, y: collection.contentOffset.y)
-            collection.contentOffset = proposedOffset
+        cycleStart = cycleSize!.width * 10000
+        let currentInFocusXOffset = cycleStart + (itemSize.width + interitemSpacing) * CGFloat(currentInFocus) - sectionInsetLeft
+        
+        let proposedOffset = CGPoint(x: currentInFocusXOffset, y: -collection.contentInset.top)
+        collection.contentOffset = proposedOffset
+        
+    }
+    
+    open override func invalidateLayout(with context: UICollectionViewLayoutInvalidationContext) {
+        if context.invalidateEverything || context.invalidateDataSourceCounts || context.contentSizeAdjustment != .zero {
+            cycleSize = nil
         }
+        
+        super.invalidateLayout(with: context)
     }
     
     private func framesForCycle(at index: Int) -> CGRect {
+        guard let cycleSize = cycleSize else { return .zero }
         let x = cycleStart + cycleSize.width * CGFloat(index)
         return CGRect(x: x, y: 0, width: cycleSize.width, height: cycleSize.height)
     }
     
     override internal func items(in rect: CGRect) -> [(index:IndexPath, frame: CGRect)] {
-        guard itemCount > 0 else { return [] }
+        guard let cycleSize = cycleSize,
+            let itemCount = itemCount, itemCount > 0 else { return [] }
         let iFirstCycle = Int(floor((rect.origin.x - cycleStart) / cycleSize.width))
         let iLastCycle = Int(floor((rect.maxX - cycleStart) / cycleSize.width))
         
@@ -120,13 +129,14 @@ open class LNZInfiniteCollectionViewLayout: LNZSnapToCenterCollectionViewLayout 
         
         attributes.append(contentsOf: attributesForHeaderAndFooter())
         
-        updateCurrentInFocus()
+        updateCurrentInFocus(in: rect)
         
         return attributes
     }
     
     open override func layoutAttributesForItem(at indexPath: IndexPath) -> UICollectionViewLayoutAttributes? {
         guard canInfiniteScroll,
+            let cycleSize = cycleSize,
             let collection = collectionView else { return super.layoutAttributesForItem(at: indexPath) }
         
         let currentRect = CGRect(origin: collection.contentOffset, size: collection.bounds.size)
