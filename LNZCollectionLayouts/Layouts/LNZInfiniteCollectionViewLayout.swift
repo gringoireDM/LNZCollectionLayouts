@@ -128,9 +128,6 @@ open class LNZInfiniteCollectionViewLayout: LNZSnapToCenterCollectionViewLayout 
         }
         
         attributes.append(contentsOf: attributesForHeaderAndFooter())
-        
-        updateCurrentInFocus(in: rect)
-        
         return attributes
     }
     

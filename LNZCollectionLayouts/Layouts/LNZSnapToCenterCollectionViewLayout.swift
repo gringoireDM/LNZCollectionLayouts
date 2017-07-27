@@ -67,9 +67,11 @@ open class LNZSnapToCenterCollectionViewLayout: UICollectionViewLayout, FocusedC
     ///- seeAlso: FocusedContaining
     public internal(set) var currentInFocus: Int = 0 {
         willSet {
+            guard newValue != currentInFocus else { return }
             focusChangeDelegate?.focusContainer(self, willChangeElement: currentInFocus, to: newValue)
         }
         didSet {
+            guard currentInFocus != oldValue else { return }
             focusChangeDelegate?.focusContainer(self, didChangeElement: currentInFocus)
         }
     }
@@ -240,7 +242,6 @@ open class LNZSnapToCenterCollectionViewLayout: UICollectionViewLayout, FocusedC
         //move the headers and footers
         
         result.append(contentsOf: attributesForHeaderAndFooter())
-        updateCurrentInFocus(in: rect)
         return result
     }
     
@@ -318,6 +319,13 @@ open class LNZSnapToCenterCollectionViewLayout: UICollectionViewLayout, FocusedC
     }
     
     open override func shouldInvalidateLayout(forBoundsChange newBounds: CGRect) -> Bool {
+        //This method is called everytime there is a change in the collection view size or in the collection view offset.
+        //The bounds in this case is to be intended as "current visible frame". We want to update the current in focus 
+        //just in case of scroll events, and not if the size changes, because in that case we want to preserve the element
+        //in the center to be the same.
+        if currentCollectionSize == newBounds.size {
+            updateCurrentInFocus(in: newBounds)
+        }
         return true
     }
 
