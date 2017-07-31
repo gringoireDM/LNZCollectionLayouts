@@ -8,14 +8,27 @@
 
 import UIKit
 
+///This methods will be called on the delegate whenever a centered element is changing. In fact as element in focus is to be intended
+///as element currently centered
 public protocol FocusChangeDelegate: class {
+    ///This method will signal to the delegate that the element in focus will change.
+    ///- parameter container: The object that is tracking the focused element
+    ///- parameter inFocus: The element currently in focus (before the change)
+    ///- parameter newInFocus: The new element that will be in focus.
     func focusContainer(_ container: FocusedContaining, willChangeElement inFocus: Int, to newInFocus: Int)
+    
+    ///This method will signal to the delegate that the element in fucs is changed.
+    ///- parameter container: The object that is tracking the focused element
+    ///- parameter inFocus: The element currently in focus
     func focusContainer(_ container: FocusedContaining, didChangeElement inFocus: Int)
 }
 
+///An object conforming FocusContaining will track elements in focus in a collection and will alert the delegate for changes-
 public protocol FocusedContaining: class {
+    ///The element currently in focus
     var currentInFocus: Int { get }
     
+    ///The delegate object to be notified for focus changes.
     weak var focusChangeDelegate: FocusChangeDelegate? { get set }
 }
 
@@ -29,7 +42,7 @@ public protocol FocusedContaining: class {
  */
 @IBDesignable
 open class LNZSnapToCenterCollectionViewLayout: UICollectionViewLayout, FocusedContaining {
-    //MARK: Inspectable properties
+    //MARK: - Inspectable properties
     
     ///The spacing between consecutive items
     @IBInspectable public var interitemSpacing: CGFloat = 8
@@ -54,6 +67,8 @@ open class LNZSnapToCenterCollectionViewLayout: UICollectionViewLayout, FocusedC
     ///If this property is true, the left and right section spacing will be adapted to enforce the first and last element to be centered.
     ///This property is true by default.
     @IBInspectable public var centerFirstItem: Bool = true
+    
+    //MARK: - Utility properties
     
     ///This property represents the actual section inset left calculated in order to have the first element of the collection centered.
     internal var sectionInsetLeft: CGFloat = 8
@@ -82,7 +97,7 @@ open class LNZSnapToCenterCollectionViewLayout: UICollectionViewLayout, FocusedC
      */
     public weak var focusChangeDelegate: FocusChangeDelegate?
     
-    //MARK: Cached properties
+    //MARK: - Cached properties
     internal var itemCount: Int?
     internal var headerHeight: CGFloat?
     internal var footerHeight: CGFloat?
@@ -90,7 +105,14 @@ open class LNZSnapToCenterCollectionViewLayout: UICollectionViewLayout, FocusedC
     internal var headerAttributes: UICollectionViewLayoutAttributes?
     internal var footerAttributes: UICollectionViewLayoutAttributes?
 
+    ///This property will track changes in the collection view size. The prepare method can be called multiple times even when the collection is scrolling
+    ///and there might be operations that in the prepare method we want to perform exclusively if the collection sie is changed.
+    internal var currentCollectionSize: CGSize = .zero
+    
+    internal var resetOffset: Bool = true
+
     //MARK: - Layout implementation
+    //MARK: Preparation
     
     override open var collectionViewContentSize: CGSize {
         guard let collection = collectionView else { return .zero }
@@ -128,52 +150,6 @@ open class LNZSnapToCenterCollectionViewLayout: UICollectionViewLayout, FocusedC
         return CGSize(width: w, height: h)
     }
 
-    open override func prepareForTransition(from oldLayout: UICollectionViewLayout) {
-        //This method will be called when this layout is applied to an existing collectionView with different layout.
-        //At this point the layout is still not changed for the collectionView, therefore we can query it to find out which would be the items that 
-        //we must display. If the layout is a FocusedContaining, then we want to give focus to the element currently in focus in the old layout.
-        //If this is not the case then we will assume that the focused item is the central one in the array of visible elements.
-        if let centerLayout = oldLayout as? FocusedContaining {
-            currentInFocus = centerLayout.currentInFocus
-        } else if let collection = oldLayout.collectionView {
-            let visibleIndexes = collection.indexPathsForVisibleItems
-            guard !visibleIndexes.isEmpty else { return }
-            currentInFocus = collection.indexPathsForVisibleItems[visibleIndexes.count/2].item
-        }
-        invalidateLayout()
-    }
-    
-    open override func invalidationContext(forBoundsChange newBounds: CGRect) -> UICollectionViewLayoutInvalidationContext {
-        let delta = CGSize(width: newBounds.width - currentCollectionSize.width, height: newBounds.height - currentCollectionSize.height)
-        
-        let context = UICollectionViewLayoutInvalidationContext()
-        context.contentSizeAdjustment = delta
-        return context
-    }
-    
-    open override func invalidateLayout(with context: UICollectionViewLayoutInvalidationContext) {
-        if context.invalidateEverything || context.invalidateDataSourceCounts || context.contentSizeAdjustment != .zero {
-            itemCount = nil
-            
-            headerHeight = nil
-            footerHeight = nil
-            
-            headerAttributes = nil
-            footerAttributes = nil
-            
-            resetOffset = true
-            
-            currentCollectionSize = collectionView?.bounds.size ?? .zero
-        }
-        super.invalidateLayout(with: context)
-    }
-    
-    ///This property will track changes in the collection view size. The prepare method can be called multiple times even when the collection is scrolling
-    ///and there might be operations that in the prepare method we want to perform exclusively if the collection sie is changed.
-    internal var currentCollectionSize: CGSize = .zero
-    
-    internal var resetOffset: Bool = true
-    
     open override func prepare() {
         super.prepare()
         
@@ -191,6 +167,41 @@ open class LNZSnapToCenterCollectionViewLayout: UICollectionViewLayout, FocusedC
             let proposedOffset = CGPoint(x: currentInFocusXOffset, y: -collection.contentInset.top)
             collection.contentOffset = proposedOffset
         }
+    }
+    
+    //MARK: Layouting and attributes generators
+    
+    ///Returns the items that should be found in a given frame. The frame is relative to the scrollView contentSize coordinate space, therefore 
+    ///the origin represents the offset of the scrollView. This method takes in consideration the items count.
+    ///- parameter rect: The ract you want the object of.
+    ///- returns: An array of tuples, where the first element represents the indexPath of the element, and the second is its rame.
+    internal func items(in rect: CGRect) -> [(index:IndexPath, frame: CGRect)] {
+        guard let itemCount = itemCount else { return [] }
+        let firstIndex = max(Int(floor((rect.origin.x - sectionInsetLeft) / (itemSize.width + interitemSpacing))), 0)
+        let lastIndex = min(Int(floor((rect.maxX - sectionInsetLeft) / (itemSize.width + interitemSpacing))), itemCount - 1)
+        
+        var result = [(index:IndexPath, frame: CGRect)]()
+        guard firstIndex <= lastIndex else { return result }
+        
+        for i in firstIndex...lastIndex {
+            let indexPath = IndexPath(item: i, section: 0)
+            let frame = frameForItem(at: indexPath)
+            result.append((indexPath, frame))
+        }
+        return result
+    }
+    
+    ///This method returns the frame for an item at a certain indexPath. This method performs pure math operations to compute the frame, therefore
+    ///there are no checks in place in ordert o ensure that the equested tems is actually existing in the array of items.
+    ///- parameter indexPath: The indexPath of the item you want to know the frame of.
+    ///- returns: A CGRect representing the frame of the requested item.
+    ///- warning: The item might not exist. This method performs no check around item counts and item existence. Using pure math, it computes the position
+    ///and the hypotetical size of the item. It is developer's responsibility to ask for item that actually exists in their collection.
+    internal func frameForItem(at indexPath: IndexPath) -> CGRect {
+        let x = sectionInsetLeft + (itemSize.width + interitemSpacing) * CGFloat(indexPath.item)
+        let y = (headerHeight ?? 0) + sectionInsetTop
+        
+        return CGRect(origin: CGPoint(x: x, y: y), size: itemSize)
     }
 
     open override func layoutAttributesForSupplementaryView(ofKind elementKind: String, at indexPath: IndexPath) -> UICollectionViewLayoutAttributes? {
@@ -220,29 +231,6 @@ open class LNZSnapToCenterCollectionViewLayout: UICollectionViewLayout, FocusedC
         return attributes
     }
     
-    internal func items(in rect: CGRect) -> [(index:IndexPath, frame: CGRect)] {
-        guard let itemCount = itemCount else { return [] }
-        let firstIndex = max(Int(floor((rect.origin.x - sectionInsetLeft) / (itemSize.width + interitemSpacing))), 0)
-        let lastIndex = min(Int(floor((rect.maxX - sectionInsetLeft) / (itemSize.width + interitemSpacing))), itemCount - 1)
-        
-        var result = [(index:IndexPath, frame: CGRect)]()
-        guard firstIndex <= lastIndex else { return result }
-        
-        for i in firstIndex...lastIndex {
-            let indexPath = IndexPath(item: i, section: 0)
-            let frame = frameForItem(at: indexPath)
-            result.append((indexPath, frame))
-        }
-        return result
-    }
-
-    func frameForItem(at indexPath: IndexPath) -> CGRect {
-        let x = sectionInsetLeft + (itemSize.width + interitemSpacing) * CGFloat(indexPath.item)
-        let y = (headerHeight ?? 0) + sectionInsetTop
-        
-        return CGRect(origin: CGPoint(x: x, y: y), size: itemSize)
-    }
-    
     open override func layoutAttributesForElements(in rect: CGRect) -> [UICollectionViewLayoutAttributes]? {
         guard let itemCount = itemCount, itemCount > 0 else { return nil }
         var result = [UICollectionViewLayoutAttributes]()
@@ -257,16 +245,6 @@ open class LNZSnapToCenterCollectionViewLayout: UICollectionViewLayout, FocusedC
         
         result.append(contentsOf: attributesForHeaderAndFooter())
         return result
-    }
-    
-    internal func updateCurrentInFocus(in rect: CGRect? = nil) {
-        guard let collection = collectionView else { return }
-        
-        let collectionViewSize = collection.bounds.size
-        let proposedRect = rect ?? CGRect(origin: CGPoint(x: collection.contentOffset.x, y: 0), size: collectionViewSize)
-
-        guard let candidate = getAttributeForCenter(in: proposedRect) else { return }
-        currentInFocus = candidate.index.item
     }
     
     internal func attributesForHeaderAndFooter() -> [UICollectionViewLayoutAttributes] {
@@ -314,23 +292,81 @@ open class LNZSnapToCenterCollectionViewLayout: UICollectionViewLayout, FocusedC
     open override func targetContentOffset(forProposedContentOffset proposedContentOffset: CGPoint, withScrollingVelocity velocity: CGPoint) -> CGPoint {
         guard let collection = collectionView else { return proposedContentOffset }
         
+        //This code allows the behavior of snap to center.
+        
         let collectionViewSize = collection.bounds.size
         let proposedRect = CGRect(origin: CGPoint(x: proposedContentOffset.x, y: 0), size: collectionViewSize)
         
+        //Here we check for the existence of an alement at the center, and we assume that this is the right element to be snapped in the center.
         guard let candidate = getAttributeForCenter(in: proposedRect) else { return proposedContentOffset }
         
         var newOffsetX = candidate.frame.midX - collection.bounds.size.width / 2
         let offset = newOffsetX - collection.contentOffset.x
         
         if (velocity.x < 0 && offset > 0) || (velocity.x > 0 && offset < 0) {
+            //If the velocity of scroll tends to superate the element to go to the next item, or the previous, we correct the new offset by adding or removing 
+            //the width of the "page"
             let pageWidth = itemSize.width + interitemSpacing
             newOffsetX += velocity.x > 0 ? pageWidth : -pageWidth
         }
         
-        currentInFocus = candidate.index.item
-        
         return CGPoint(x: newOffsetX, y: proposedContentOffset.y)
     }
+    
+    open override func prepareForTransition(from oldLayout: UICollectionViewLayout) {
+        //This method will be called when this layout is applied to an existing collectionView with different layout.
+        //At this point the layout is still not changed for the collectionView, therefore we can query it to find out which would be the items that
+        //we must display. If the layout is a FocusedContaining, then we want to give focus to the element currently in focus in the old layout.
+        //If this is not the case then we will assume that the focused item is the central one in the array of visible elements.
+        if let centerLayout = oldLayout as? FocusedContaining {
+            currentInFocus = centerLayout.currentInFocus
+        } else if let collection = oldLayout.collectionView {
+            let visibleIndexes = collection.indexPathsForVisibleItems
+            guard !visibleIndexes.isEmpty else { return }
+            currentInFocus = collection.indexPathsForVisibleItems[visibleIndexes.count/2].item
+        }
+        invalidateLayout()
+    }
+
+    //MARK: Invalidation
+    
+    open override func invalidationContext(forBoundsChange newBounds: CGRect) -> UICollectionViewLayoutInvalidationContext {
+        let delta = CGSize(width: newBounds.width - currentCollectionSize.width, height: newBounds.height - currentCollectionSize.height)
+        
+        let context = UICollectionViewLayoutInvalidationContext()
+        context.contentSizeAdjustment = delta
+        return context
+    }
+    
+    open override func invalidateLayout(with context: UICollectionViewLayoutInvalidationContext) {
+        //we want to reload data just in the condition of important changes in data structure or in case of frame change.
+        if context.invalidateEverything || context.invalidateDataSourceCounts || context.contentSizeAdjustment != .zero {
+            itemCount = nil
+            
+            headerHeight = nil
+            footerHeight = nil
+            
+            headerAttributes = nil
+            footerAttributes = nil
+            
+            resetOffset = true
+            
+            currentCollectionSize = collectionView?.bounds.size ?? .zero
+        }
+        super.invalidateLayout(with: context)
+    }
+    
+    ///This method is intended to update the current element in focus. 
+    internal func updateCurrentInFocus(in rect: CGRect? = nil) {
+        guard let collection = collectionView else { return }
+        
+        let collectionViewSize = collection.bounds.size
+        let proposedRect = rect ?? CGRect(origin: CGPoint(x: collection.contentOffset.x, y: 0), size: collectionViewSize)
+
+        guard let candidate = getAttributeForCenter(in: proposedRect) else { return }
+        currentInFocus = candidate.index.item
+    }
+    
     
     open override func shouldInvalidateLayout(forBoundsChange newBounds: CGRect) -> Bool {
         //This method is called everytime there is a change in the collection view size or in the collection view offset.
