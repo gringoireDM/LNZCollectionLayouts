@@ -16,13 +16,13 @@ All the layouts are customizable through interface builder. It is possible to ge
 
 ## LNZSnapToCenterCollectionViewLayout
 
-![LNZSnapToCenterCollectionViewLayout](./CenterLayout.png)
+![LNZSnapToCenterCollectionViewLayout](./LNZSnapToCenterLayout.gif)
 
 This layout is a simple horizontal layout that snaps elements to center. The first item is centered by default leaving white space on the left. This behavior is switched off by setting the var `centerFirstItem` to false.
 
 ## LNZInfiniteCollectionViewLayout
 
-![LNZInfiniteCollectionViewLayout](./InfiniteLayout.png)
+![LNZInfiniteCollectionViewLayout](./LNZInfiniteLayout.gif)
 
 This layout is an LNZSnapToCenterCollectionViewLayout that reorganize attributes while scrolling so that they are scrollable horizontally indefinitely. 
 Each cell maintains their indexPath, and the data source order is not modified by the layout. 
@@ -34,7 +34,7 @@ suitable for an infinite scroll behavior, the LNZInfiniteCollectionViewLayout wi
 
 ## LNZCarouselCollectionViewLayout
 
-![LNZCarouselCollectionViewLayout](./CarouselLayout.png)
+![LNZCarouselCollectionViewLayout](./LNZCarouselLayout.gif)
 
 This is an LNZSnapToCenterCollectionViewLayout with the difference that the item considered in focus will appear on full scaled and all the other not in focus items will be scaled down proportionally to the 
 distance from the center of the collectionView. The infinite scrolling can be disabled, as well as the snap to center behavior, by setting the properties `isInfiniteScrollEnabled` and `snapToCenter` to false.
