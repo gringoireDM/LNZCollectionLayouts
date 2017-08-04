@@ -301,6 +301,7 @@ open class LNZSnapToCenterCollectionViewLayout: UICollectionViewLayout, FocusedC
         guard let candidate = getAttributeForCenter(in: proposedRect) else { return proposedContentOffset }
         
         var newOffsetX = candidate.frame.midX - collection.bounds.size.width / 2
+        
         let offset = newOffsetX - collection.contentOffset.x
         
         if (velocity.x < 0 && offset > 0) || (velocity.x > 0 && offset < 0) {
@@ -310,6 +311,12 @@ open class LNZSnapToCenterCollectionViewLayout: UICollectionViewLayout, FocusedC
             newOffsetX += velocity.x > 0 ? pageWidth : -pageWidth
         }
         
+        //If the offset is out f the contentSize boundaries on iOS 9 the scroll view will behave oddly, so we want to be sure that the new offset is not less
+        //than 0 and not more than the contentSize.width
+
+        newOffsetX = max(newOffsetX, 0)
+        newOffsetX = min(newOffsetX, collection.contentSize.width - collection.bounds.width)
+
         return CGPoint(x: newOffsetX, y: proposedContentOffset.y)
     }
     
