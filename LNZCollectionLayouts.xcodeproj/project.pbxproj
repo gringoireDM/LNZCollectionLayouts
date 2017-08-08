@@ -16,6 +16,7 @@
 		500D6F131F1E32B000FE20D4 /* CollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 500D6F121F1E32B000FE20D4 /* CollectionViewController.swift */; };
 		500D6F151F1E3D7000FE20D4 /* LNZSnapToCenterCollectionViewLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 500D6F141F1E3D7000FE20D4 /* LNZSnapToCenterCollectionViewLayout.swift */; };
 		500D6F181F1E6E5100FE20D4 /* LNZCarouselCollectionViewLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 500D6F161F1E6E0000FE20D4 /* LNZCarouselCollectionViewLayout.swift */; };
+		50547B7E1F325343008BC41D /* LNZPhotoCollectionViewLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50547B7D1F325343008BC41D /* LNZPhotoCollectionViewLayout.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -30,6 +31,7 @@
 		500D6F121F1E32B000FE20D4 /* CollectionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CollectionViewController.swift; sourceTree = "<group>"; };
 		500D6F141F1E3D7000FE20D4 /* LNZSnapToCenterCollectionViewLayout.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LNZSnapToCenterCollectionViewLayout.swift; sourceTree = "<group>"; };
 		500D6F161F1E6E0000FE20D4 /* LNZCarouselCollectionViewLayout.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LNZCarouselCollectionViewLayout.swift; sourceTree = "<group>"; };
+		50547B7D1F325343008BC41D /* LNZPhotoCollectionViewLayout.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LNZPhotoCollectionViewLayout.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -80,6 +82,7 @@
 				500D6F141F1E3D7000FE20D4 /* LNZSnapToCenterCollectionViewLayout.swift */,
 				500D6F101F1E1D3D00FE20D4 /* LNZInfiniteCollectionViewLayout.swift */,
 				500D6F161F1E6E0000FE20D4 /* LNZCarouselCollectionViewLayout.swift */,
+				50547B7D1F325343008BC41D /* LNZPhotoCollectionViewLayout.swift */,
 			);
 			path = Layouts;
 			sourceTree = "<group>";
@@ -158,6 +161,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				500D6F131F1E32B000FE20D4 /* CollectionViewController.swift in Sources */,
+				50547B7E1F325343008BC41D /* LNZPhotoCollectionViewLayout.swift in Sources */,
 				500D6F001F1E1CFD00FE20D4 /* ViewController.swift in Sources */,
 				500D6F111F1E1D3D00FE20D4 /* LNZInfiniteCollectionViewLayout.swift in Sources */,
 				500D6F181F1E6E5100FE20D4 /* LNZCarouselCollectionViewLayout.swift in Sources */,
