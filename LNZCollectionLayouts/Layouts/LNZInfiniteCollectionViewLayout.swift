@@ -123,7 +123,7 @@ open class LNZInfiniteCollectionViewLayout: LNZSnapToCenterCollectionViewLayout 
     }
     
     override internal func items(in rect: CGRect) -> [(index:IndexPath, frame: CGRect)] {
-        guard let cycleSize = cycleSize,
+        guard let cycleSize = cycleSize, cycleSize.width != 0,
             let itemCount = itemCount, itemCount > 0 else { return [] }
         
         //We need to determine which are the cycles currently displayed on the screen. So that we can determine the array of elements 
