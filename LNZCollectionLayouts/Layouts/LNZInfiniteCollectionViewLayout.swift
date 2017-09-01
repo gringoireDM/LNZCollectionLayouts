@@ -33,7 +33,7 @@ open class LNZInfiniteCollectionViewLayout: LNZSnapToCenterCollectionViewLayout 
         //To allow infnite scroll the same item cannot be displayed twice in the same visible area, therefore, 
         //we want a content size bug enough to ensure that this will not happen.
         guard let cycleSize = cycleSize else { return false }
-        return cycleSize.width > (collectionView?.bounds.size.width ?? 0) * 1.5
+        return cycleSize.width > (collectionView?.bounds.size.width ?? 0) * 2.0
     }
     
     //MARK: - Cached properties
@@ -83,9 +83,9 @@ open class LNZInfiniteCollectionViewLayout: LNZSnapToCenterCollectionViewLayout 
             itemCount = collection.dataSource?.collectionView(collection, numberOfItemsInSection: 0) ?? 0
         }
         
-        guard cycleSize == nil else { return }
+        guard let itemCount = itemCount, cycleSize == nil else { return }
         
-        let width = (itemSize.width + interitemSpacing) * CGFloat(itemCount ?? 0)
+        let width = (itemSize.width + interitemSpacing) * CGFloat(itemCount)
         let height = itemSize.height
         
         cycleSize = CGSize(width: width, height: height)
@@ -123,6 +123,7 @@ open class LNZInfiniteCollectionViewLayout: LNZSnapToCenterCollectionViewLayout 
     }
     
     override internal func items(in rect: CGRect) -> [(index:IndexPath, frame: CGRect)] {
+        guard canInfiniteScroll else { return super.items(in: rect) }
         guard let cycleSize = cycleSize, cycleSize.width != 0,
             let itemCount = itemCount, itemCount > 0 else { return [] }
         
