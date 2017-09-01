@@ -340,7 +340,7 @@ open class LNZSnapToCenterCollectionViewLayout: UICollectionViewLayout, FocusedC
     open override func invalidationContext(forBoundsChange newBounds: CGRect) -> UICollectionViewLayoutInvalidationContext {
         let delta = CGSize(width: newBounds.width - currentCollectionSize.width, height: newBounds.height - currentCollectionSize.height)
         
-        let context = UICollectionViewLayoutInvalidationContext()
+        let context = super.invalidationContext(forBoundsChange: newBounds)
         context.contentSizeAdjustment = delta
         return context
     }
