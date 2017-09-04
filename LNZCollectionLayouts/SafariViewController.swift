@@ -48,9 +48,7 @@ class SafariViewController: UICollectionViewController, UICollectionViewDelegate
     
     public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, didDeleteItemAt indexPath: IndexPath) {
         elements.remove(at: indexPath.item)
-        collectionView.performBatchUpdates({
-            collectionView.deleteItems(at: [indexPath])
-        }, completion: nil)
+        collectionView.deleteItems(at: [indexPath])
     }
 
     

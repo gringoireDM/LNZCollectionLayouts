@@ -20,10 +20,10 @@ public class LNZSafariLayout: UICollectionViewLayout, UIGestureRecognizerDelegat
     @IBInspectable public var interitemSpacing: CGFloat = 100
     
     ///The space between the items and the top border of the collection view
-    @IBInspectable public var sectionInsetTop: CGFloat = 8
+    @IBInspectable public var sectionInsetTop: CGFloat = 0
     
     ///The space between the items and the bottom border of the collection view
-    @IBInspectable public var sectionInsetBottom: CGFloat = 8
+    @IBInspectable public var sectionInsetBottom: CGFloat = 0
     
     ///The size for each element in the collection
     @IBInspectable public var itemSize: CGSize = CGSize(width: 100, height: 100)
@@ -45,6 +45,7 @@ public class LNZSafariLayout: UICollectionViewLayout, UIGestureRecognizerDelegat
     }
     
     private var offsetsForDeletingItems: [IndexPath: CGPoint]?
+    private var deletingIndexPaths = [IndexPath]()
     
     // MARK: Method override
     
@@ -86,6 +87,25 @@ public class LNZSafariLayout: UICollectionViewLayout, UIGestureRecognizerDelegat
         
     }
     
+    public override func prepare(forCollectionViewUpdates updateItems: [UICollectionViewUpdateItem]) {
+        super.prepare(forCollectionViewUpdates: updateItems)
+        for item in updateItems {
+            switch item.updateAction {
+            case .delete:
+                guard let indexPath = item.indexPathBeforeUpdate else { return }
+                deletingIndexPaths.append(indexPath)
+            default:
+                break
+            }
+        }
+    }
+    
+    public override func finalizeCollectionViewUpdates() {
+        super.finalizeCollectionViewUpdates()
+        
+        deletingIndexPaths.removeAll()
+    }
+    
     public override func layoutAttributesForElements(in rect: CGRect) -> [UICollectionViewLayoutAttributes]? {
         let attributesObjects = visibleIndexes(in: rect).flatMap(layoutAttributesForItem)
         return attributesObjects
@@ -108,6 +128,9 @@ public class LNZSafariLayout: UICollectionViewLayout, UIGestureRecognizerDelegat
     }
     
     public override func finalLayoutAttributesForDisappearingItem(at itemIndexPath: IndexPath) -> UICollectionViewLayoutAttributes? {
+        
+        guard deletingIndexPaths.contains(itemIndexPath) == true else { return nil }
+        
         var frame = frameForAttribute(at: itemIndexPath)
         
         if currentDeletingIndexPath == itemIndexPath {
@@ -149,6 +172,10 @@ public class LNZSafariLayout: UICollectionViewLayout, UIGestureRecognizerDelegat
         } else {
             offsetsForDeletingItems = nil
         }
+    }
+    
+    public override func shouldInvalidateLayout(forBoundsChange newBounds: CGRect) -> Bool {
+        return true
     }
     
     // MARK: Helper Methods
@@ -233,28 +260,18 @@ public class LNZSafariLayout: UICollectionViewLayout, UIGestureRecognizerDelegat
             invalidateLayout(with: invalidationContext)
             gestureRecognizer.setTranslation(.zero, in: collectionView)
         case .ended:
-            
-            
-            
-            if let collection = collectionView,
+            guard let collection = collectionView,
                 let delegate = collection.delegate as? UICollectionViewDelegateSafariLayout,
-                let currentDeletingIndexPath = currentDeletingIndexPath {
-                
-                let velocity = gestureRecognizer.velocity(in: collectionView)
-                let cumulativeOffset = offsetsForDeletingItems?[currentDeletingIndexPath] ?? .zero
-                
-                let frame = frameForAttribute(at: currentDeletingIndexPath)
-                
-                if cumulativeOffset.x < -frame.width/2.0 || velocity.x < -500 {
-                    delegate.collectionView?(collection, layout: self, didDeleteItemAt: currentDeletingIndexPath)
-                } else {
-                    fallthrough
-                }
-                
-                self.currentDeletingIndexPath = nil
-            } else {
-                fallthrough
-            }
+                let currentDeletingIndexPath = currentDeletingIndexPath else { fallthrough }
+            
+            let velocity = gestureRecognizer.velocity(in: collectionView)
+            let cumulativeOffset = offsetsForDeletingItems?[currentDeletingIndexPath] ?? .zero
+            
+            let frame = frameForAttribute(at: currentDeletingIndexPath)
+            
+            guard cumulativeOffset.x < -frame.width/2.0 || velocity.x < -1000 else { fallthrough }
+            delegate.collectionView?(collection, layout: self, didDeleteItemAt: currentDeletingIndexPath)
+            self.currentDeletingIndexPath = nil
         case .cancelled, .failed:
             currentDeletingIndexPath = nil
             
