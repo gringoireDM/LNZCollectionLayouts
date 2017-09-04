@@ -8,8 +8,9 @@
 
 import UIKit
 
-class SafariViewController: UICollectionViewController, UICollectionViewDelegateFlowLayout {
-   
+class SafariViewController: UICollectionViewController, UICollectionViewDelegateSafariLayout {
+    var elements: [Int] = Array(0...24)
+
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -20,7 +21,7 @@ class SafariViewController: UICollectionViewController, UICollectionViewDelegate
     }
     
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 15
+        return elements.count
     }
     
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -29,8 +30,10 @@ class SafariViewController: UICollectionViewController, UICollectionViewDelegate
         cell.layer.borderColor = UIColor.darkGray.cgColor
         cell.layer.borderWidth = 1
         
+        let el = elements[indexPath.item]
+        
         let label = cell.contentView.viewWithTag(10)! as! UILabel
-        label.text = "\(indexPath.item)"
+        label.text = "\(el)"
         
         return cell
     }
@@ -38,6 +41,18 @@ class SafariViewController: UICollectionViewController, UICollectionViewDelegate
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         return view.bounds.size
     }
+    
+    public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, canDeleteItemAt indexPath: IndexPath) -> Bool {
+        return true
+    }
+    
+    public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, didDeleteItemAt indexPath: IndexPath) {
+        elements.remove(at: indexPath.item)
+        collectionView.performBatchUpdates({
+            collectionView.deleteItems(at: [indexPath])
+        }, completion: nil)
+    }
+
     
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         collectionView?.collectionViewLayout.invalidateLayout()

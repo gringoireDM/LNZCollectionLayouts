@@ -114,7 +114,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
-                        <collectionViewLayout key="collectionViewLayout" id="5e0-H3-Pzj" customClass="LNZSafariTabLayout" customModule="LNZCollectionLayouts" customModuleProvider="target">
+                        <collectionViewLayout key="collectionViewLayout" id="5e0-H3-Pzj" customClass="LNZSafariLayout" customModule="LNZCollectionLayouts" customModuleProvider="target">
                             <userDefinedRuntimeAttributes>
                                 <userDefinedRuntimeAttribute type="number" keyPath="minimumInteritemSpacing">
                                     <real key="value" value="200"/>
