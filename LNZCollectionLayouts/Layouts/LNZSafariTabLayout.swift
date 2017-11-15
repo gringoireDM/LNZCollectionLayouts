@@ -17,31 +17,80 @@ internal class LNZSafariLayoutInvalidationContext: UICollectionViewLayoutInvalid
 public class LNZSafariLayout: UICollectionViewLayout, UIGestureRecognizerDelegate {
     // MARK: Customization Properties
     ///The spacing between consecutive items
-    @IBInspectable public var interitemSpacing: CGFloat = 100
+    @IBInspectable public var maxInteritemSpacing: CGFloat = 200
     
     ///The space between the items and the top border of the collection view
-    @IBInspectable public var sectionInsetTop: CGFloat = 0
+    @IBInspectable public var sectionInsetTop: CGFloat = 20
     
     ///The space between the items and the bottom border of the collection view
-    @IBInspectable public var sectionInsetBottom: CGFloat = 0
+    @IBInspectable public var sectionInsetBottom: CGFloat = 20
     
     ///The size for each element in the collection
     @IBInspectable public var itemSize: CGSize = CGSize(width: 100, height: 100)
     
+    ///This value allows to control the distance from the screen of the top part of each item.
+    ///0 means on the screen, positive values indicates the items to zoom in perspectically like they
+    ///were going out from the screen, and negative values indicates the items top be pushed back on
+    ///the screen (the effect will be a perspective zoom out
+    @IBInspectable public var zOffset: CGFloat = -60
+    
     var itemCount: Int?
     
-    var deleteGestureRecognizer: UIPanGestureRecognizer?
+    private var deleteGestureRecognizer: UIPanGestureRecognizer?
     
-    private var final3dTransform: CATransform3D {
-        var transform = CATransform3DIdentity;
-        transform.m34 = -1.0/600.0;
+    private let perspectiveCorrection: CGFloat = -1.0/1000.0
+    
+    private func final3dTransform(for attributes: UICollectionViewLayoutAttributes, forceMinRotation: Bool = false) -> CATransform3D {
+        var transform = CATransform3DIdentity
+        transform.m34 = perspectiveCorrection
         
         let controllers = itemCount ?? 0
-        let multiplier: CGFloat = (controllers <= 5 ? CGFloat(controllers) : 5.0) - 1.0
+        let multiplier: CGFloat = min(CGFloat(controllers), 5.0) - 1.0
         
-        let translateTransform = CATransform3DTranslate(transform, 0.0, 0.0, -120.0)
-        let rotateTransform = CATransform3DRotate(transform, -CGFloat.pi/10.0 - CGFloat.pi/10.0 * multiplier/4.0, 1.0, 0.0, 0.0)
-        return CATransform3DConcat(translateTransform, rotateTransform)
+        let rotationAngleAt0 = -CGFloat.pi/10.0 - CGFloat.pi/10.0 * multiplier/4.0
+        let maxRotationAngle = -CGFloat.pi/2.5
+        
+        var rotationAngle = rotationAngleAt0
+        
+        if !forceMinRotation,
+            let collectionBounds = collectionView?.bounds {
+            
+            var yOnScreen = attributes.frame.origin.y - collectionBounds.origin.y - sectionInsetTop
+            if yOnScreen < 0 {
+                yOnScreen = 0
+            } else if yOnScreen > collectionBounds.height {
+                yOnScreen = collectionBounds.height
+            }
+            
+            let maxRotationVariance = maxRotationAngle - rotationAngleAt0
+            rotationAngle += (maxRotationVariance/collectionBounds.height) * yOnScreen
+        }
+        
+        //The anchor point is in the center of the view. We want to translate the view back and correct its
+        //origin point so that the effect will not be views going out from the screen. To do so we need some
+        //trigonometry. We will use r as radius to determine how much we must translate back on the z axis and
+        //on the y axis to ensure that all the view will be contained *below* the plane of the screen.
+        //r is the distance between the prolongation of the view after rotation on the screen, and its center.
+        let r = attributes.bounds.height/2.0 + abs(zOffset/sin(rotationAngle))
+        
+        //how much we must push the view below the plane of the screen is exactly r * sin(alpha) with alpha to be
+        //the desired rotation in radiants.
+        let zTranslation = r * sin(rotationAngle)
+        
+        //For the y we want that the projection on the screen of the top part of the view is exactly the same as
+        //the view before it was rotated. The rotation will obviously describe an arc therefore the projection
+        //on the plane of the screen will be different. The delta will be exactly r - r * cos(alpha)
+        let yTranslation: CGFloat = r * (1 - cos(rotationAngle))
+        
+        //We can translate on y and z
+        let zTranslateTransform = CATransform3DTranslate(transform, 0.0, -yTranslation, zTranslation)
+        
+        //and now we are ready to rotate around the x axis.
+        let rotateTransform = CATransform3DRotate(zTranslateTransform, rotationAngle, 1.0, 0.0, 0.0)
+        
+        //the order is important because the translation matrix is relative to the view's plane, and not the
+        //screen's plane. This means that if we were rotating first, we were not getting the wanted result.
+        return rotateTransform
     }
     
     private var offsetsForDeletingItems: [IndexPath: CGPoint]?
@@ -51,14 +100,24 @@ public class LNZSafariLayout: UICollectionViewLayout, UIGestureRecognizerDelegat
     
     public override var collectionViewContentSize: CGSize {
         guard let itemCount = itemCount,
-            let collection = collectionView,
-            let lastAttributeFrame = layoutAttributesForItem(at: IndexPath(item: itemCount-1, section: 0))?.frame else { return .zero }
+            let collection = collectionView else { return .zero }
         
-        let h = lastAttributeFrame.maxY + sectionInsetBottom
+        let lastIndexPath = IndexPath(item: itemCount-1, section: 0)
+        let frame = frameForAttribute(at: lastIndexPath)
+        
+        let lastAttribute = UICollectionViewLayoutAttributes(forCellWith: lastIndexPath)
+        lastAttribute.frame = frame
+        
+        //We need here to override the bounds so that the content size is not dependant on
+        //the current state of the collectionView
+        
+        lastAttribute.transform3D = final3dTransform(for: lastAttribute, forceMinRotation: true)
+        
+        let h = lastAttribute.frame.maxY + sectionInsetBottom
         var size = collection.bounds.size
         size.height = h
-        return size
         
+        return size
     }
     
     override public class var invalidationContextClass: AnyClass {
@@ -122,7 +181,7 @@ public class LNZSafariLayout: UICollectionViewLayout, UIGestureRecognizerDelegat
         }
         
         attributes.zIndex = indexPath.item
-        attributes.transform3D = final3dTransform
+        attributes.transform3D = final3dTransform(for: attributes)
         
         return attributes
     }
@@ -141,7 +200,7 @@ public class LNZSafariLayout: UICollectionViewLayout, UIGestureRecognizerDelegat
         let attributes = UICollectionViewLayoutAttributes(forCellWith: itemIndexPath)
         attributes.frame = frame
         attributes.zIndex = itemIndexPath.item
-        attributes.transform3D = final3dTransform
+        attributes.transform3D = final3dTransform(for: attributes)
         attributes.alpha = 0
         
         return attributes
@@ -180,14 +239,29 @@ public class LNZSafariLayout: UICollectionViewLayout, UIGestureRecognizerDelegat
     
     // MARK: Helper Methods
     
+    private func interitemSpacing() -> CGFloat {
+        var interitemSpacing = maxInteritemSpacing
+        
+        if let collection = collectionView,
+            let itemCount = itemCount,
+            itemCount > 0 {
+            interitemSpacing = (collection.bounds.height - sectionInsetTop - sectionInsetBottom)/CGFloat(min(itemCount, 5))
+        }
+        
+        return interitemSpacing
+    }
+    
+    
     private func frameForAttribute(at indexPath: IndexPath) -> CGRect {
         var attributeSize = itemSize
+        guard let itemCount = itemCount else { return .zero }
         if let collection = collectionView,
             let collectionDelegate = collection.delegate as? UICollectionViewDelegateSafariLayout,
             let itemSize = collectionDelegate.collectionView?(collection, layout: self, sizeForItemAt: indexPath) {
             attributeSize = itemSize
         }
         
+        let interitemSpacing = self.interitemSpacing()
         let y = sectionInsetTop + interitemSpacing * CGFloat(indexPath.item)
         let origin = CGPoint(x: 0, y: y)
         
@@ -197,7 +271,11 @@ public class LNZSafariLayout: UICollectionViewLayout, UIGestureRecognizerDelegat
     func item(forYPosition y: CGFloat) -> Int? {
         guard let itemCount = itemCount,
             itemCount > 0,
-            interitemSpacing != 0 else { return nil }
+            maxInteritemSpacing != 0 else { return nil }
+        
+        
+        let interitemSpacing = self.interitemSpacing()
+        
         var i = Int(floor((y - sectionInsetTop)/interitemSpacing))
         if i < 0 { i = 0 }
         if i > itemCount - 1 { i = itemCount - 1 }
@@ -211,9 +289,11 @@ public class LNZSafariLayout: UICollectionViewLayout, UIGestureRecognizerDelegat
         
         guard let startingItem = item(forYPosition: startingY),
             let endingItem = item(forYPosition: endingY),
-            startingItem < endingItem else {
+            startingItem <= endingItem else {
                 return []
         }
+        
+        
         let indexes = Array(startingItem...endingItem).map {
             IndexPath(item: $0, section: 0)
         }
@@ -222,7 +302,7 @@ public class LNZSafariLayout: UICollectionViewLayout, UIGestureRecognizerDelegat
     
     // MARK: Gesture Recognizer
     
-    public func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
+    @objc public func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
         guard let collection = collectionView,
             let delegate = collection.delegate as? UICollectionViewDelegateSafariLayout,
             let panGesture = gestureRecognizer as? UIPanGestureRecognizer else {

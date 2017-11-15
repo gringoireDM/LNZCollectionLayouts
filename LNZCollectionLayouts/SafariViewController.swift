@@ -9,7 +9,7 @@
 import UIKit
 
 class SafariViewController: UICollectionViewController, UICollectionViewDelegateSafariLayout {
-    var elements: [Int] = Array(0...24)
+    var elements: [Int] = Array(0...10)
 
     override func viewDidLoad() {
         super.viewDidLoad()
