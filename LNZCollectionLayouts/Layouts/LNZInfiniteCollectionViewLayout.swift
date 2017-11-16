@@ -17,7 +17,7 @@ import UIKit
  same object to appear twice between the visible items, then the layout will behave like a normal
  *LNZSnapToCenterCollectionViewLayout* or a normal UICollectionViewFlowLayout if the snap to center was disabled.
  */
-@IBDesignable
+@IBDesignable @objcMembers
 open class LNZInfiniteCollectionViewLayout: LNZSnapToCenterCollectionViewLayout {
     //MARK: - Inspectable properties
     

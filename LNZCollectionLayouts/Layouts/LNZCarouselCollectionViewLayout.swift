@@ -14,7 +14,7 @@ import UIKit
  disableabe. This layout will configure the items so that the items that are not currenlty on focus will
  appear zoomed out, while the only item at full itemSize will be the one in focus.
  */
-@IBDesignable
+@IBDesignable @objcMembers
 open class LNZCarouselCollectionViewLayout: LNZInfiniteCollectionViewLayout {
     //MARK: - Inspectable properties
     ///This property wil allow to enable or disable the intinite scrolling behavior. The default value is true.

@@ -10,7 +10,7 @@ import UIKit
 
 ///This methods will be called on the delegate whenever a centered element is changing. In fact as element in focus is to be intended
 ///as element currently centered
-public protocol FocusChangeDelegate: class {
+@objc public protocol FocusChangeDelegate: class {
     ///This method will signal to the delegate that the element in focus will change.
     ///- parameter container: The object that is tracking the focused element
     ///- parameter inFocus: The element currently in focus (before the change)
@@ -24,7 +24,7 @@ public protocol FocusChangeDelegate: class {
 }
 
 ///An object conforming FocusContaining will track elements in focus in a collection and will alert the delegate for changes-
-public protocol FocusedContaining: class {
+@objc public protocol FocusedContaining: class {
     ///The element currently in focus
     var currentInFocus: Int { get }
     
@@ -40,7 +40,7 @@ public protocol FocusedContaining: class {
  It handles header and footer where the height is specified by the UICollectionViewFlowLayout delegate methods
  collectionView(_: layout: referenceSizeForHeaderInSection) and collectionView(_: layout: referenceSizeForFooterInSection)
  */
-@IBDesignable
+@IBDesignable @objcMembers
 open class LNZSnapToCenterCollectionViewLayout: UICollectionViewLayout, FocusedContaining {
     //MARK: - Inspectable properties
     
@@ -340,7 +340,7 @@ open class LNZSnapToCenterCollectionViewLayout: UICollectionViewLayout, FocusedC
     open override func invalidationContext(forBoundsChange newBounds: CGRect) -> UICollectionViewLayoutInvalidationContext {
         let delta = CGSize(width: newBounds.width - currentCollectionSize.width, height: newBounds.height - currentCollectionSize.height)
         
-        let context = UICollectionViewLayoutInvalidationContext()
+        let context = super.invalidationContext(forBoundsChange: newBounds)
         context.contentSizeAdjustment = delta
         return context
     }
