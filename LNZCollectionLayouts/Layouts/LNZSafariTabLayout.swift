@@ -302,7 +302,7 @@ public class LNZSafariLayout: UICollectionViewLayout, UIGestureRecognizerDelegat
     
     // MARK: Gesture Recognizer
     
-    func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
+    public func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
         guard let collection = collectionView,
             let delegate = collection.delegate as? UICollectionViewDelegateSafariLayout,
             let panGesture = gestureRecognizer as? UIPanGestureRecognizer else {
