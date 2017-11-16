@@ -8,12 +8,13 @@
 
 import UIKit
 
+@objcMembers
 internal class LNZSafariLayoutInvalidationContext: UICollectionViewLayoutInvalidationContext {
     var interactivelyDeleting: Bool = false
     var interactivelyDeletingIndexPaths: [(indexPath: IndexPath, deltaOffset: CGPoint)]?
 }
 
-@IBDesignable
+@IBDesignable @objcMembers
 public class LNZSafariLayout: UICollectionViewLayout, UIGestureRecognizerDelegate {
     // MARK: Customization Properties
     ///The spacing between consecutive items
@@ -254,7 +255,6 @@ public class LNZSafariLayout: UICollectionViewLayout, UIGestureRecognizerDelegat
     
     private func frameForAttribute(at indexPath: IndexPath) -> CGRect {
         var attributeSize = itemSize
-        guard let itemCount = itemCount else { return .zero }
         if let collection = collectionView,
             let collectionDelegate = collection.delegate as? UICollectionViewDelegateSafariLayout,
             let itemSize = collectionDelegate.collectionView?(collection, layout: self, sizeForItemAt: indexPath) {
@@ -302,7 +302,7 @@ public class LNZSafariLayout: UICollectionViewLayout, UIGestureRecognizerDelegat
     
     // MARK: Gesture Recognizer
     
-    @objc public func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
+    func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
         guard let collection = collectionView,
             let delegate = collection.delegate as? UICollectionViewDelegateSafariLayout,
             let panGesture = gestureRecognizer as? UIPanGestureRecognizer else {
@@ -319,9 +319,9 @@ public class LNZSafariLayout: UICollectionViewLayout, UIGestureRecognizerDelegat
     }
     
     private var currentDeletingIndexPath: IndexPath?
-    @objc func didPanToDelete(gestureRecognizer: UIPanGestureRecognizer) {
+    func didPanToDelete(gestureRecognizer: UIPanGestureRecognizer) {
         switch gestureRecognizer.state {
-        case .possible: break //Good for you gesture... nothign to do here
+        case .possible: break //Good for you, gesture... nothing to do here
         case .began:
             let touch = gestureRecognizer.location(in: collectionView)
             guard let item = self.item(forYPosition: touch.y) else { return }
