@@ -35,28 +35,34 @@ public class LNZSafariLayout: UICollectionViewLayout, UIGestureRecognizerDelegat
     ///the screen (the effect will be a perspective zoom out
     @IBInspectable public var zOffset: CGFloat = -60
     
-    var itemCount: Int?
+    // MARK: - Private vars -
+    private var itemCount: Int?
     
+    // MARK: Delete related vars
     private var deleteGestureRecognizer: UIPanGestureRecognizer?
-    
+    private var offsetsForDeletingItems: [IndexPath: CGPoint]?
+    private var deletingIndexPaths = [IndexPath]()
+    private var currentDeletingIndexPath: IndexPath?
+
+    // MARK: Perspective related
     private let perspectiveCorrection: CGFloat = -1.0/1000.0
     
-    private func final3dTransform(for attributes: UICollectionViewLayoutAttributes, forceMinRotation: Bool = false) -> CATransform3D {
-        var transform = CATransform3DIdentity
-        transform.m34 = perspectiveCorrection
-        
+    private var rotationAngleAt0: CGFloat {
         let controllers = itemCount ?? 0
         let multiplier: CGFloat = min(CGFloat(controllers), 5.0) - 1.0
         
-        let rotationAngleAt0 = -CGFloat.pi/10.0 - CGFloat.pi/10.0 * multiplier/4.0
-        let maxRotationAngle = -CGFloat.pi/2.5
-        
+        return -CGFloat.pi/10.0 - CGFloat.pi/10.0 * multiplier/4.0
+    }
+    
+    private let maxRotationAngle = -CGFloat.pi/2.5
+    
+    // MARK: - Perspective related methods
+    private func computeAngle(forItemOrigin attributesOrigin: CGPoint) -> CGFloat {
         var rotationAngle = rotationAngleAt0
         
-        if !forceMinRotation,
-            let collectionBounds = collectionView?.bounds {
+        if let collectionBounds = collectionView?.bounds {
             
-            var yOnScreen = attributes.frame.origin.y - collectionBounds.origin.y - sectionInsetTop
+            var yOnScreen = attributesOrigin.y - collectionBounds.origin.y - sectionInsetTop
             if yOnScreen < 0 {
                 yOnScreen = 0
             } else if yOnScreen > collectionBounds.height {
@@ -66,13 +72,22 @@ public class LNZSafariLayout: UICollectionViewLayout, UIGestureRecognizerDelegat
             let maxRotationVariance = maxRotationAngle - rotationAngleAt0
             rotationAngle += (maxRotationVariance/collectionBounds.height) * yOnScreen
         }
+
+        return rotationAngle
+    }
+    
+    private func final3dTransform(forItemOrigin attributesOrigin: CGPoint, andSize attributesSize: CGSize, enforcingAngle angle: CGFloat? = nil) -> CATransform3D {
+        var transform = CATransform3DIdentity
+        transform.m34 = perspectiveCorrection
+        
+        let rotationAngle = angle ?? computeAngle(forItemOrigin: attributesOrigin)
         
         //The anchor point is in the center of the view. We want to translate the view back and correct its
         //origin point so that the effect will not be views going out from the screen. To do so we need some
         //trigonometry. We will use r as radius to determine how much we must translate back on the z axis and
         //on the y axis to ensure that all the view will be contained *below* the plane of the screen.
         //r is the distance between the prolongation of the view after rotation on the screen, and its center.
-        let r = attributes.bounds.height/2.0 + abs(zOffset/sin(rotationAngle))
+        let r = attributesSize.height/2.0 + abs(zOffset/sin(rotationAngle))
         
         //how much we must push the view below the plane of the screen is exactly r * sin(alpha) with alpha to be
         //the desired rotation in radiants.
@@ -94,10 +109,8 @@ public class LNZSafariLayout: UICollectionViewLayout, UIGestureRecognizerDelegat
         return rotateTransform
     }
     
-    private var offsetsForDeletingItems: [IndexPath: CGPoint]?
-    private var deletingIndexPaths = [IndexPath]()
-    
-    // MARK: Method override
+    // MARK: - Methods override -
+    // MARK: Preparation
     
     public override var collectionViewContentSize: CGSize {
         guard let itemCount = itemCount,
@@ -112,17 +125,13 @@ public class LNZSafariLayout: UICollectionViewLayout, UIGestureRecognizerDelegat
         //We need here to override the bounds so that the content size is not dependant on
         //the current state of the collectionView
         
-        lastAttribute.transform3D = final3dTransform(for: lastAttribute, forceMinRotation: true)
+        lastAttribute.transform3D = final3dTransform(forItemOrigin: lastAttribute.frame.origin, andSize: lastAttribute.bounds.size, enforcingAngle: rotationAngleAt0)
         
         let h = lastAttribute.frame.maxY + sectionInsetBottom
         var size = collection.bounds.size
         size.height = h
         
         return size
-    }
-    
-    override public class var invalidationContextClass: AnyClass {
-        return LNZSafariLayoutInvalidationContext.self
     }
     
     public override func prepare() {
@@ -147,6 +156,8 @@ public class LNZSafariLayout: UICollectionViewLayout, UIGestureRecognizerDelegat
         
     }
     
+    // MARK: Updates logic
+    
     public override func prepare(forCollectionViewUpdates updateItems: [UICollectionViewUpdateItem]) {
         super.prepare(forCollectionViewUpdates: updateItems)
         for item in updateItems {
@@ -166,6 +177,27 @@ public class LNZSafariLayout: UICollectionViewLayout, UIGestureRecognizerDelegat
         deletingIndexPaths.removeAll()
     }
     
+    public override func finalLayoutAttributesForDisappearingItem(at itemIndexPath: IndexPath) -> UICollectionViewLayoutAttributes? {
+        
+        guard deletingIndexPaths.contains(itemIndexPath) == true else { return nil }
+        
+        var frame = frameForAttribute(at: itemIndexPath)
+        
+        if currentDeletingIndexPath == itemIndexPath {
+            //If the delete is a consequence of an interactive delete
+            frame.origin.x = -frame.maxX
+        }
+        
+        let attributes = UICollectionViewLayoutAttributes(forCellWith: itemIndexPath)
+        attributes.frame = frame
+        attributes.zIndex = itemIndexPath.item
+        attributes.transform3D = final3dTransform(forItemOrigin: attributes.frame.origin, andSize: attributes.bounds.size)
+        attributes.alpha = 0
+        
+        return attributes
+    }
+
+    // MARK : Layouting Logic
     public override func layoutAttributesForElements(in rect: CGRect) -> [UICollectionViewLayoutAttributes]? {
         let attributesObjects = visibleIndexes(in: rect).flatMap(layoutAttributesForItem)
         return attributesObjects
@@ -182,32 +214,16 @@ public class LNZSafariLayout: UICollectionViewLayout, UIGestureRecognizerDelegat
         }
         
         attributes.zIndex = indexPath.item
-        attributes.transform3D = final3dTransform(for: attributes)
-        
-        return attributes
-    }
-    
-    public override func finalLayoutAttributesForDisappearingItem(at itemIndexPath: IndexPath) -> UICollectionViewLayoutAttributes? {
-        
-        guard deletingIndexPaths.contains(itemIndexPath) == true else { return nil }
-        
-        var frame = frameForAttribute(at: itemIndexPath)
-        
-        if currentDeletingIndexPath == itemIndexPath {
-            //If the delete is a consequence of an interactive delete
-            frame.origin.x = -frame.maxX
-        }
-        
-        let attributes = UICollectionViewLayoutAttributes(forCellWith: itemIndexPath)
-        attributes.frame = frame
-        attributes.zIndex = itemIndexPath.item
-        attributes.transform3D = final3dTransform(for: attributes)
-        attributes.alpha = 0
+        attributes.transform3D = final3dTransform(forItemOrigin: attributes.frame.origin, andSize: attributes.bounds.size)
         
         return attributes
     }
     
     // MARK: Invalidation Logic
+    
+    override public class var invalidationContextClass: AnyClass {
+        return LNZSafariLayoutInvalidationContext.self
+    }
     
     public override func invalidateLayout(with context: UICollectionViewLayoutInvalidationContext) {
         super.invalidateLayout(with: context)
@@ -238,7 +254,7 @@ public class LNZSafariLayout: UICollectionViewLayout, UIGestureRecognizerDelegat
         return true
     }
     
-    // MARK: Helper Methods
+    // MARK: - Helper Methods
     
     private func interitemSpacing() -> CGFloat {
         var interitemSpacing = maxInteritemSpacing
@@ -293,14 +309,13 @@ public class LNZSafariLayout: UICollectionViewLayout, UIGestureRecognizerDelegat
                 return []
         }
         
-        
         let indexes = Array(startingItem...endingItem).map {
             IndexPath(item: $0, section: 0)
         }
         return indexes
     }
     
-    // MARK: Gesture Recognizer
+    // MARK: - Gesture Recognizer
     
     public func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
         guard let collection = collectionView,
@@ -318,7 +333,6 @@ public class LNZSafariLayout: UICollectionViewLayout, UIGestureRecognizerDelegat
         return delegate.collectionView?(collection, layout: self, canDeleteItemAt: IndexPath(item: item, section: 0)) ?? false
     }
     
-    private var currentDeletingIndexPath: IndexPath?
     func didPanToDelete(gestureRecognizer: UIPanGestureRecognizer) {
         switch gestureRecognizer.state {
         case .possible: break //Good for you, gesture... nothing to do here
@@ -361,5 +375,16 @@ public class LNZSafariLayout: UICollectionViewLayout, UIGestureRecognizerDelegat
             
             invalidateLayout(with: invalidationContext)
         }
+    }
+}
+
+// MARK: - Animator -
+public extension LNZSafariLayout {
+    public func animator(forItem indexPath: IndexPath) -> SafariAnimator {
+        let animator = SafariAnimator(presentingIndexPath: indexPath) {[weak self] (origin, size, angle) -> CATransform3D in
+            guard let `self` = self else { return CATransform3DIdentity }
+            return self.final3dTransform(forItemOrigin: origin, andSize: size, enforcingAngle: angle)
+        }
+        return animator
     }
 }

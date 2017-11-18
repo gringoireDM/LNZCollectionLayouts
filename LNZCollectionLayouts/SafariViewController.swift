@@ -8,12 +8,15 @@
 
 import UIKit
 
-class SafariViewController: UICollectionViewController, UICollectionViewDelegateSafariLayout {
+class SafariViewController: UICollectionViewController, UICollectionViewDelegateSafariLayout, SafariLayoutContaining {    
     var elements: [Int] = Array(0...10)
-
+    var safariCollectionView: UICollectionView {
+        return collectionView!
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        transitioningDelegate = self
     }
     
     override func numberOfSections(in collectionView: UICollectionView) -> Int {
@@ -55,6 +58,24 @@ class SafariViewController: UICollectionViewController, UICollectionViewDelegate
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         collectionView?.collectionViewLayout.invalidateLayout()
     }
-
     
+    var animator: SafariAnimator?
+    override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        modalPresentationStyle = .custom
+        
+        let controller = UIViewController()
+        controller.transitioningDelegate = self
+        present(controller, animated: true, completion: nil)
+    }
+}
+
+extension SafariViewController: UIViewControllerTransitioningDelegate {
+    public func animationController(forPresented presented: UIViewController, presenting: UIViewController, source: UIViewController) -> UIViewControllerAnimatedTransitioning? {
+        guard let indexPath = collectionView?.indexPathsForSelectedItems?.first else { return nil }
+        return (collectionView?.collectionViewLayout as? LNZSafariLayout)?.animator(forItem: indexPath)
+    }
+    
+    func animationController(forDismissed dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {
+        return nil
+    }
 }
