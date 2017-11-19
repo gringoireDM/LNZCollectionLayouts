@@ -59,13 +59,14 @@ class SafariViewController: UICollectionViewController, UICollectionViewDelegate
         collectionView?.collectionViewLayout.invalidateLayout()
     }
     
-    var animator: SafariAnimator?
-    override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        modalPresentationStyle = .custom
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        guard segue.identifier == "presentTabSegue",
+            let detailController = segue.destination as? SafariModalViewController,
+            let indexPath = collectionView?.indexPathsForSelectedItems?.first else { return }
         
-        let controller = UIViewController()
-        controller.transitioningDelegate = self
-        present(controller, animated: true, completion: nil)
+        let el = elements[indexPath.item]
+        detailController.transitioningDelegate = self
+        detailController.presentedElement = el
     }
 }
 
@@ -76,6 +77,11 @@ extension SafariViewController: UIViewControllerTransitioningDelegate {
     }
     
     func animationController(forDismissed dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {
-        return nil
+        guard let element = (dismissed as? SafariModalViewController)?.presentedElement,
+            let item = elements.index(of: element) else { return nil }
+        let indexPath = IndexPath(item: item, section: 0)
+        let animator = (collectionView?.collectionViewLayout as? LNZSafariLayout)?.animator(forItem: indexPath)
+        animator?.reversed = true
+        return animator
     }
 }

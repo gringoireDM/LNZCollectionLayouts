@@ -15,8 +15,8 @@
             <objects>
                 <viewController id="BYZ-38-t0r" customClass="ViewController" customModule="LNZCollectionLayouts" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="y3c-jy-aDJ"/>
-                        <viewControllerLayoutGuide type="bottom" id="wfy-db-euE"/>
+                        <viewControllerLayoutGuide type="top" id="znc-id-M6d"/>
+                        <viewControllerLayoutGuide type="bottom" id="7mk-6z-bGA"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
@@ -141,7 +141,7 @@
                                             <nil key="textColor"/>
                                             <nil key="highlightedColor"/>
                                         </label>
-                                        <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" editable="NO" textAlignment="natural" selectable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7Uh-E3-Nxu">
+                                        <textView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" editable="NO" textAlignment="natural" selectable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7Uh-E3-Nxu">
                                             <rect key="frame" x="0.0" y="41" width="207" height="165"/>
                                             <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                             <string key="text">Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda.</string>
@@ -160,6 +160,9 @@
                                     <constraint firstItem="5jb-Jc-YS3" firstAttribute="centerX" secondItem="xhQ-6r-lhM" secondAttribute="centerX" id="xgU-DT-M0n"/>
                                 </constraints>
                                 <size key="customSize" width="207" height="206"/>
+                                <connections>
+                                    <segue destination="FzH-l9-2ZS" kind="presentation" identifier="presentTabSegue" id="NSf-zP-RnO"/>
+                                </connections>
                             </collectionViewCell>
                         </cells>
                         <connections>
@@ -170,7 +173,60 @@
                 </collectionViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="q1Z-n1-GUz" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1156" y="899.10044977511257"/>
+            <point key="canvasLocation" x="1156" y="1259"/>
+        </scene>
+        <!--Safari Modal View Controller-->
+        <scene sceneID="uoW-pD-mGM">
+            <objects>
+                <viewController id="FzH-l9-2ZS" customClass="SafariModalViewController" customModule="LNZCollectionLayouts" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="7GF-GS-Xuj"/>
+                        <viewControllerLayoutGuide type="bottom" id="yMs-QI-AX0"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="F8I-rd-fPl">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" tag="10" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="mBt-So-m7I">
+                                <rect key="frame" x="166" y="52" width="42" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <textView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" editable="NO" textAlignment="natural" selectable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="xNa-35-AFk">
+                                <rect key="frame" x="0.0" y="73" width="375" height="594"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <string key="text">Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda.</string>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                            </textView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="vbm-05-DaW">
+                                <rect key="frame" x="16" y="40" width="30" height="30"/>
+                                <state key="normal" title="X"/>
+                                <connections>
+                                    <action selector="close:" destination="FzH-l9-2ZS" eventType="touchUpInside" id="ch6-QI-I8q"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstItem="mBt-So-m7I" firstAttribute="top" secondItem="7GF-GS-Xuj" secondAttribute="bottom" constant="32" id="9VR-UH-N1t"/>
+                            <constraint firstItem="vbm-05-DaW" firstAttribute="leading" secondItem="F8I-rd-fPl" secondAttribute="leadingMargin" id="J2I-mo-hjB"/>
+                            <constraint firstItem="xNa-35-AFk" firstAttribute="leading" secondItem="F8I-rd-fPl" secondAttribute="leading" id="PXT-mo-lZO"/>
+                            <constraint firstItem="vbm-05-DaW" firstAttribute="top" secondItem="7GF-GS-Xuj" secondAttribute="bottom" constant="20" id="Rh8-df-sfk"/>
+                            <constraint firstItem="xNa-35-AFk" firstAttribute="top" secondItem="mBt-So-m7I" secondAttribute="bottom" id="oRe-UT-Ahf"/>
+                            <constraint firstItem="yMs-QI-AX0" firstAttribute="top" secondItem="xNa-35-AFk" secondAttribute="bottom" id="pCg-E7-Lig"/>
+                            <constraint firstAttribute="trailing" secondItem="xNa-35-AFk" secondAttribute="trailing" id="uQ4-LG-Mu9"/>
+                            <constraint firstItem="mBt-So-m7I" firstAttribute="centerX" secondItem="F8I-rd-fPl" secondAttribute="centerX" id="zbj-mb-Ys1"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="elementTitle" destination="mBt-So-m7I" id="jeA-UV-NKv"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="pRf-nd-oiZ" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1942" y="1259"/>
         </scene>
         <!--Collection View Controller-->
         <scene sceneID="oUm-5m-6sL">
