@@ -8,12 +8,15 @@
 
 import UIKit
 
-class SafariViewController: UICollectionViewController, UICollectionViewDelegateSafariLayout {
+class SafariViewController: UICollectionViewController, UICollectionViewDelegateSafariLayout, SafariLayoutContaining {    
     var elements: [Int] = Array(0...10)
-
+    var safariCollectionView: UICollectionView {
+        return collectionView!
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        transitioningDelegate = self
     }
     
     override func numberOfSections(in collectionView: UICollectionView) -> Int {
@@ -55,6 +58,30 @@ class SafariViewController: UICollectionViewController, UICollectionViewDelegate
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         collectionView?.collectionViewLayout.invalidateLayout()
     }
-
     
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        guard segue.identifier == "presentTabSegue",
+            let detailController = segue.destination as? SafariModalViewController,
+            let indexPath = collectionView?.indexPathsForSelectedItems?.first else { return }
+        
+        let el = elements[indexPath.item]
+        detailController.transitioningDelegate = self
+        detailController.presentedElement = el
+    }
+}
+
+extension SafariViewController: UIViewControllerTransitioningDelegate {
+    public func animationController(forPresented presented: UIViewController, presenting: UIViewController, source: UIViewController) -> UIViewControllerAnimatedTransitioning? {
+        guard let indexPath = collectionView?.indexPathsForSelectedItems?.first else { return nil }
+        return (collectionView?.collectionViewLayout as? LNZSafariLayout)?.animator(forItem: indexPath)
+    }
+    
+    func animationController(forDismissed dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {
+        guard let element = (dismissed as? SafariModalViewController)?.presentedElement,
+            let item = elements.index(of: element) else { return nil }
+        let indexPath = IndexPath(item: item, section: 0)
+        let animator = (collectionView?.collectionViewLayout as? LNZSafariLayout)?.animator(forItem: indexPath)
+        animator?.reversed = true
+        return animator
+    }
 }

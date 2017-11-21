@@ -15,6 +15,8 @@
 		500D6F111F1E1D3D00FE20D4 /* LNZInfiniteCollectionViewLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 500D6F101F1E1D3D00FE20D4 /* LNZInfiniteCollectionViewLayout.swift */; };
 		500D6F131F1E32B000FE20D4 /* CollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 500D6F121F1E32B000FE20D4 /* CollectionViewController.swift */; };
 		500D6F181F1E6E5100FE20D4 /* LNZCarouselCollectionViewLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 500D6F161F1E6E0000FE20D4 /* LNZCarouselCollectionViewLayout.swift */; };
+		501CF9F31FBFABBD003CAC14 /* SafariAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 501CF9F21FBFABBD003CAC14 /* SafariAnimator.swift */; };
+		501CF9F51FC0AEC3003CAC14 /* SafariModalViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 501CF9F41FC0AEC3003CAC14 /* SafariModalViewController.swift */; };
 		5025EE8F1F42EA6C001521F6 /* LNZSafariTabLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5025EE8E1F42EA6C001521F6 /* LNZSafariTabLayout.swift */; };
 		5025EE931F43070A001521F6 /* SafariViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5025EE921F43070A001521F6 /* SafariViewController.swift */; };
 		50377DA41F574FFB00A567D6 /* LNZSnapToCenterCollectionViewLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 500D6F141F1E3D7000FE20D4 /* LNZSnapToCenterCollectionViewLayout.swift */; };
@@ -33,6 +35,8 @@
 		500D6F121F1E32B000FE20D4 /* CollectionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CollectionViewController.swift; sourceTree = "<group>"; };
 		500D6F141F1E3D7000FE20D4 /* LNZSnapToCenterCollectionViewLayout.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LNZSnapToCenterCollectionViewLayout.swift; sourceTree = "<group>"; };
 		500D6F161F1E6E0000FE20D4 /* LNZCarouselCollectionViewLayout.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LNZCarouselCollectionViewLayout.swift; sourceTree = "<group>"; };
+		501CF9F21FBFABBD003CAC14 /* SafariAnimator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SafariAnimator.swift; sourceTree = "<group>"; };
+		501CF9F41FC0AEC3003CAC14 /* SafariModalViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SafariModalViewController.swift; sourceTree = "<group>"; };
 		5025EE8E1F42EA6C001521F6 /* LNZSafariTabLayout.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LNZSafariTabLayout.swift; sourceTree = "<group>"; };
 		5025EE921F43070A001521F6 /* SafariViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SafariViewController.swift; sourceTree = "<group>"; };
 		508E11761F5D585200895B7D /* UICollectionViewDelegateSafariLayout.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UICollectionViewDelegateSafariLayout.swift; sourceTree = "<group>"; };
@@ -73,6 +77,7 @@
 				500D6EFF1F1E1CFD00FE20D4 /* ViewController.swift */,
 				500D6F121F1E32B000FE20D4 /* CollectionViewController.swift */,
 				5025EE921F43070A001521F6 /* SafariViewController.swift */,
+				501CF9F41FC0AEC3003CAC14 /* SafariModalViewController.swift */,
 				500D6F011F1E1CFD00FE20D4 /* Main.storyboard */,
 				500D6F041F1E1CFD00FE20D4 /* Assets.xcassets */,
 				500D6F061F1E1CFD00FE20D4 /* LaunchScreen.storyboard */,
@@ -84,6 +89,7 @@
 		500D6F0F1F1E1D2500FE20D4 /* Layouts */ = {
 			isa = PBXGroup;
 			children = (
+				501CF9F11FBFAB3A003CAC14 /* Animator */,
 				508E11751F5D584400895B7D /* CustomDelegates */,
 				500D6F141F1E3D7000FE20D4 /* LNZSnapToCenterCollectionViewLayout.swift */,
 				500D6F101F1E1D3D00FE20D4 /* LNZInfiniteCollectionViewLayout.swift */,
@@ -91,6 +97,14 @@
 				5025EE8E1F42EA6C001521F6 /* LNZSafariTabLayout.swift */,
 			);
 			path = Layouts;
+			sourceTree = "<group>";
+		};
+		501CF9F11FBFAB3A003CAC14 /* Animator */ = {
+			isa = PBXGroup;
+			children = (
+				501CF9F21FBFABBD003CAC14 /* SafariAnimator.swift */,
+			);
+			path = Animator;
 			sourceTree = "<group>";
 		};
 		508E11751F5D584400895B7D /* CustomDelegates */ = {
@@ -176,6 +190,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				500D6F131F1E32B000FE20D4 /* CollectionViewController.swift in Sources */,
+				501CF9F51FC0AEC3003CAC14 /* SafariModalViewController.swift in Sources */,
 				500D6F001F1E1CFD00FE20D4 /* ViewController.swift in Sources */,
 				5025EE931F43070A001521F6 /* SafariViewController.swift in Sources */,
 				508E11771F5D585200895B7D /* UICollectionViewDelegateSafariLayout.swift in Sources */,
@@ -183,6 +198,7 @@
 				500D6F111F1E1D3D00FE20D4 /* LNZInfiniteCollectionViewLayout.swift in Sources */,
 				500D6F181F1E6E5100FE20D4 /* LNZCarouselCollectionViewLayout.swift in Sources */,
 				500D6EFE1F1E1CFD00FE20D4 /* AppDelegate.swift in Sources */,
+				501CF9F31FBFABBD003CAC14 /* SafariAnimator.swift in Sources */,
 				5025EE8F1F42EA6C001521F6 /* LNZSafariTabLayout.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
