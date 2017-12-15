@@ -41,3 +41,51 @@ distance from the center of the collectionView. The infinite scrolling can be di
 The scaling behavior can be customized to obtain the desired scale for items not in focus by changing the properties values `scalingOffset` and `minimumScaleFactor`.
 
 `scalingOffset` represents the distance from the center after which all the items will appear scaled by `minimumScaleFactor`. The items in the center will always have a scale factor of 1.
+
+## LNZSafariLayout
+
+![LNZSafariLayout](./SafariLayout.gif)
+
+This is a collection view that mimics the behavior of safari app tabs. You can delete a tile with a swipe gesture to the left just like in safari and there is embedded a custom animator to trigger a transition 
+between the current collectionViewController to the view controller represented by the selected tab.
+
+This layout does not accepts delegates that are `UICollectionViewDelegateFlowLayout` because `LNZSafariLayout` *it is not* a Flow layout. If a delegate of this type is passed to the collectionView, just the methods of the `UICollectionViewDelegate` will be called. 
+
+To enable the delete your delegate must conform `UICollectionViewDelegateSafariLayout` which is a protocol that inherits from `UICollectionViewDelegate` just like the well known `UICollectionViewDelegateFlowLayout`, and implement the methods
+`collectionView(_: layout: canDeleteItemAt:)` to decide which cells can be deleted and `collectionView(_: layout: didDeleteItemAt:)` to react to the delete action. This pattern is the same used by `UITableview` to delete a cell by implementing `tableView(_:commit:forRowAt:)` method. 
+So in this method you must update your data source accordingly to the change.
+
+To specify a size for each item you must conform to `UICollectionViewDelegateSafariLayout` and implement the optional method `collectionView(_ : layout: sizeForItemAt:)` if not implemented the default size stored in the property `itemSize` will be used as size for each cell of the collection.
+
+If on didSelect of a cell you want to present a view controller using the custom animator your presenting view controller (the one that contains the CollectionView with the `LNZSafariLayout` must conform to `SafariLayoutContaining` protocol, then when the controller is created you should perform these actions:
+
+```
+viewController.modalPresentationStyle = .custom
+viewController.transitioningDelegate = self
+```
+
+By setting the transitioning delegate to self you can choose which is the animator to be used for this controller present and dismiss.
+
+Conforming to the `UIViewControllerTransitioningDelegate` will give you the chance to decide which is the animator to be used.
+
+```
+    public func animationController(forPresented presented: UIViewController, presenting: UIViewController, source: UIViewController) -> UIViewControllerAnimatedTransitioning? {
+        guard let indexPath = collectionView?.indexPathsForSelectedItems?.first, 
+        	let safariLayout = collectionView?.collectionViewLayout as? LNZSafariLayout else { return nil }
+        
+        return safariLayout.animator(forItem: indexPath)
+    }
+    
+    func animationController(forDismissed dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {
+        guard let element = (dismissed as? SafariModalViewController)?.presentedElement,
+            let item = elements.index(of: element),
+            let safariLayout = collectionView?.collectionViewLayout as? LNZSafariLayout else { return nil }
+            
+        let indexPath = IndexPath(item: item, section: 0)
+        let animator = safariLayout.animator(forItem: indexPath)
+        animator?.reversed = true
+        return animator
+    }
+```
+
+LNZSafariLayout can configure an animator to be able to animate the transition for the current index Path.
