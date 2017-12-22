@@ -27,6 +27,8 @@ public class SafariAnimator: NSObject, UIViewControllerAnimatedTransitioning {
     ///The duration of the whole animation
     public var animationDuration: TimeInterval = 1
     
+    public var shouldInterpolateToViewController: Bool = true
+    
     private let transformForItem: (_ origin: CGPoint, _ size: CGSize, _ angle: CGFloat) -> CATransform3D
     
     /**
@@ -151,12 +153,8 @@ public class SafariAnimator: NSObject, UIViewControllerAnimatedTransitioning {
         safariController.safariCollectionView.alpha = 0
         
         //Ready to animate
-        UIView.animate(withDuration: animationDuration/2.0, animations: {
-            for (indexPath, cell) in mockCells {
-                self.cellOpenTransform(indexPath: indexPath, cell: cell, inRect: mockCollectionView.bounds)
-            }
-        }) {(finished) in
-            
+        
+        DispatchQueue.main.asyncAfter(deadline: .now()+animationDuration/2.0) {
             //At this point the first part of the animation is finished. All the cells that are not the ones that should
             //be animated are now transparent, but we want the presenting cell to go full screen and the mock collection
             //view might be not full screen. We cannot add the presenting mock cell on top of the mockCollection as
@@ -165,16 +163,25 @@ public class SafariAnimator: NSObject, UIViewControllerAnimatedTransitioning {
             mockCollectionView.clipsToBounds = false
         }
         
-        UIView.animate(withDuration: animationDuration, animations: {
+        UIView.animateKeyframes(withDuration: animationDuration, delay: 0, options: .beginFromCurrentState, animations: {
             let presentingCell = mockCells[self.presentingIndexPath]
             presentingCell?.layer.transform = CATransform3DIdentity
             presentingCell?.frame = containerView.convert(containerView.bounds, to: mockCollectionView)
-            
-            to.view.alpha = 1
+            if self.shouldInterpolateToViewController {
+                to.view.alpha = 1
+            }
+
+            UIView.addKeyframe(withRelativeStartTime: 0, relativeDuration: self.animationDuration/2.0, animations: {
+                for (indexPath, cell) in mockCells {
+                    self.cellOpenTransform(indexPath: indexPath, cell: cell, inRect: mockCollectionView.bounds)
+                }
+            })
         }) { (finished) in
+            to.view.alpha = 1
+            
             containerView.addSubview(to.view)
             to.view.layer.mask = nil
-
+            
             mockCollectionView.removeFromSuperview()
             transitionContext.completeTransition(finished)
             
@@ -223,9 +230,6 @@ public class SafariAnimator: NSObject, UIViewControllerAnimatedTransitioning {
         
         var mockCells = [IndexPath: (cell: UIView, originalFrame: CGRect, originalTransform: CATransform3D)]()
 
-        if !safariController.safariCollectionView.indexPathsForVisibleItems.contains(presentingIndexPath) {
-            safariController.safariCollectionView.scrollToItem(at: presentingIndexPath, at: .centeredVertically, animated: false)
-        }
         let visibleCellsMap = visibleCells(in: safariController)
         
         for (indexPath, cell) in visibleCellsMap {
@@ -253,8 +257,16 @@ public class SafariAnimator: NSObject, UIViewControllerAnimatedTransitioning {
         
         DispatchQueue.main.asyncAfter(deadline: .now() + animationDuration/2) {
             mockCollectionView.clipsToBounds = true
+        }
+        
+        UIView.animateKeyframes(withDuration: animationDuration, delay: 0, options: .beginFromCurrentState, animations: {
+            let presentingCell = mockCells[self.presentingIndexPath]
+            presentingCell?.cell.layer.transform = presentingCell!.originalTransform
+            presentingCell?.cell.frame = presentingCell!.originalFrame
             
-            UIView.animate(withDuration: self.animationDuration/2) {
+            fromClone.alpha = 0
+
+            UIView.addKeyframe(withRelativeStartTime: self.animationDuration/2.0, relativeDuration: self.animationDuration/2.0, animations: {
                 var cells = mockCells
                 cells[self.presentingIndexPath] = nil
                 for (cell, originalFrame, originalTransform) in cells.values {
@@ -262,20 +274,14 @@ public class SafariAnimator: NSObject, UIViewControllerAnimatedTransitioning {
                     cell.layer.transform = originalTransform
                     cell.alpha = 1
                 }
-            }
-        }
-        
-        
-        UIView.animate(withDuration: animationDuration, animations: {
-            let presentingCell = mockCells[self.presentingIndexPath]
-            presentingCell?.cell.layer.transform = presentingCell!.originalTransform
-            presentingCell?.cell.frame = presentingCell!.originalFrame
-
-            fromClone.alpha = 0
+            })
         }) { (finished) in
             safariController.safariCollectionView.alpha = 1
-
+            
             mockCollectionView.removeFromSuperview()
+            if to.view.superview == nil {
+                containerView.addSubview(to.view)
+            }
             transitionContext.completeTransition(finished)
         }
     }
