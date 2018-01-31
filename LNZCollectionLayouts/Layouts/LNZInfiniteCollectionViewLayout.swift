@@ -167,7 +167,7 @@ open class LNZInfiniteCollectionViewLayout: LNZSnapToCenterCollectionViewLayout 
         guard canInfiniteScroll else { return super.layoutAttributesForElements(in: rect) }
         var attributes = [UICollectionViewLayoutAttributes]()
         
-        for item in items(in: rect) {
+        for item in items(in: collectionView?.bounds ?? rect) {
             let attribute = UICollectionViewLayoutAttributes(forCellWith: item.index)
             attribute.frame = item.frame
             
