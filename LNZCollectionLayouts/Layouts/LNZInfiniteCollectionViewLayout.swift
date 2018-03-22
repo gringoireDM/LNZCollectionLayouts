@@ -49,7 +49,7 @@ open class LNZInfiniteCollectionViewLayout: LNZSnapToCenterCollectionViewLayout 
 
     override open var collectionViewContentSize: CGSize {
         let size = super.collectionViewContentSize
-        guard canInfiniteScroll else { return size }
+        guard canInfiniteScroll, let cycleSize = cycleSize else { return size }
         
         //Even if the tiles will not be duplicated, the attributes for the cells will be computed so that the frames changes according
         //to the position of the collectin content offset. To allow the user to scroll back and forward "for ever" we need to set the
@@ -60,7 +60,7 @@ open class LNZInfiniteCollectionViewLayout: LNZSnapToCenterCollectionViewLayout 
         //subviews are shifted by the same amount. Therefore scrollView.contentOffset is nothing else than scrollView.bounds.origin.
         //There is no extra memory allocation involved in having a big contentSize. The memory allocation for an empty scrollView with
         //a size of 100x100 and a content size of 100000x100000 will be the same as a normal empty view with size 100x100.
-        return CGSize(width: CGFloat.greatestFiniteMagnitude, height: size.height)
+        return CGSize(width: cycleSize.width * 20000, height: size.height)
     }
     
     open override func prepare() {

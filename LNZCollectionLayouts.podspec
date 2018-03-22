@@ -1,7 +1,7 @@
 Pod::Spec.new do |s|
 
     s.platform = :ios
-    s.version = "1.1.2"
+    s.version = "1.1.3"
     s.ios.deployment_target = '8.0'
     s.name = "LNZCollectionLayouts"
  	s.summary      = "A swift collection of UICollectionViewLayout subclasses."
@@ -19,7 +19,7 @@ Pod::Spec.new do |s|
 
     s.source = {
         :git => "https://github.com/gringoireDM/LNZCollectionLayouts.git",
-        :tag => "v1.1.2"
+        :tag => "v1.1.3"
     }
 
     s.framework = "UIKit"

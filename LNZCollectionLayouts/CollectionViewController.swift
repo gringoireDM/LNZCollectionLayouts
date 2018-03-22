@@ -37,7 +37,9 @@ class CollectionViewController: UICollectionViewController {
     }
     
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
-        collectionView?.collectionViewLayout.invalidateLayout()
+        coordinator.animate(alongsideTransition: { (coord) in
+            self.collectionView?.collectionViewLayout.invalidateLayout()
+        }, completion: nil)
     }
     
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
