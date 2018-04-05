@@ -14,6 +14,11 @@ Included in this repository there are 3 layouts currently used in the Saks 5th A
 
 All the layouts are customizable through interface builder. It is possible to get notified through delegate pattern for updates of their elements in focus, where as element in focus is intended to be the element currently centered.
 
+### Please note
+
+v1.1.4 is compatible with xCode 9.3 and up.
+
+
 ## LNZSnapToCenterCollectionViewLayout
 
 ![LNZSnapToCenterCollectionViewLayout](./LNZSnapToCenterLayout.gif)
