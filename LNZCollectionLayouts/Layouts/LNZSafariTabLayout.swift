@@ -199,7 +199,7 @@ public class LNZSafariLayout: UICollectionViewLayout, UIGestureRecognizerDelegat
 
     // MARK : Layouting Logic
     public override func layoutAttributesForElements(in rect: CGRect) -> [UICollectionViewLayoutAttributes]? {
-        let attributesObjects = visibleIndexes(in: rect).flatMap(layoutAttributesForItem)
+        let attributesObjects = visibleIndexes(in: rect).compactMap(layoutAttributesForItem)
         return attributesObjects
     }
     
