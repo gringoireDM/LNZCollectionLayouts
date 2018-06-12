@@ -99,7 +99,7 @@ public class SafariAnimator: NSObject, UIViewControllerAnimatedTransitioning {
         
         var safariController: SafariLayoutContaining! = from as? SafariLayoutContaining
         if safariController == nil {
-            safariController = from.childViewControllers.last as? SafariLayoutContaining
+            safariController = from.children.last as? SafariLayoutContaining
         }
         
         //This Transition must be performed from a SafariLayoutContaining viewController to a ViewController
@@ -163,7 +163,7 @@ public class SafariAnimator: NSObject, UIViewControllerAnimatedTransitioning {
             mockCollectionView.clipsToBounds = false
         }
         
-        UIView.animateKeyframes(withDuration: animationDuration, delay: 0, options: .beginFromCurrentState, animations: {
+        UIView.animateKeyframes(withDuration: animationDuration, delay: 0, options: UIView.KeyframeAnimationOptions.beginFromCurrentState, animations: {
             let presentingCell = mockCells[self.presentingIndexPath]
             presentingCell?.layer.transform = CATransform3DIdentity
             presentingCell?.frame = containerView.convert(containerView.bounds, to: mockCollectionView)
@@ -216,7 +216,7 @@ public class SafariAnimator: NSObject, UIViewControllerAnimatedTransitioning {
 
         var safariController: SafariLayoutContaining! = to as? SafariLayoutContaining
         if safariController == nil {
-            safariController = to.childViewControllers.last as? SafariLayoutContaining
+            safariController = to.children.last as? SafariLayoutContaining
         }
         
         //This Transition must be performed from  a ViewController to a SafariLayoutContaining viewController
@@ -259,7 +259,7 @@ public class SafariAnimator: NSObject, UIViewControllerAnimatedTransitioning {
             mockCollectionView.clipsToBounds = true
         }
         
-        UIView.animateKeyframes(withDuration: animationDuration, delay: 0, options: .beginFromCurrentState, animations: {
+        UIView.animateKeyframes(withDuration: animationDuration, delay: 0, options: UIView.KeyframeAnimationOptions.beginFromCurrentState, animations: {
             let presentingCell = mockCells[self.presentingIndexPath]
             presentingCell?.cell.layer.transform = presentingCell!.originalTransform
             presentingCell?.cell.frame = presentingCell!.originalFrame

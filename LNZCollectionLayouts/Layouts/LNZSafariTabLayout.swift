@@ -327,7 +327,7 @@ public class LNZSafariLayout: UICollectionViewLayout, UIGestureRecognizerDelegat
         let touch = panGesture.location(in: collection)
         let velocity = panGesture.velocity(in: collection)
         
-        guard fabs(velocity.x) > fabs(velocity.y),
+        guard abs(velocity.x) > abs(velocity.y),
             let item = self.item(forYPosition: touch.y) else { return false }
         
         return delegate.collectionView?(collection, layout: self, canDeleteItemAt: IndexPath(item: item, section: 0)) ?? false

@@ -1,10 +1,11 @@
 Pod::Spec.new do |s|
 
     s.platform = :ios
-    s.version = "1.1.4"
+    s.version = "1.2.1"
     s.ios.deployment_target = '8.0'
     s.name = "LNZCollectionLayouts"
  	s.summary      = "A swift collection of UICollectionViewLayout subclasses."
+	s.swift_version = '4.2'
 
   	s.description  = <<-DESC
                    LNZCollectionLayouts is a collection of UICollectionViewLayout subclasses ready to be used to make your collection views custom and more interesting from UX point of view.
@@ -19,7 +20,7 @@ Pod::Spec.new do |s|
 
     s.source = {
         :git => "https://github.com/gringoireDM/LNZCollectionLayouts.git",
-        :tag => "v1.1.4"
+        :tag => "v1.2.1"
     }
 
     s.framework = "UIKit"
