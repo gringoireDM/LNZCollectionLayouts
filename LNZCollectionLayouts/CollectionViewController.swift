@@ -12,8 +12,8 @@ class CollectionViewController: UICollectionViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        collectionView?.register(UICollectionReusableView.self, forSupplementaryViewOfKind: UICollectionElementKindSectionHeader, withReuseIdentifier: "header")
-        collectionView?.register(UICollectionReusableView.self, forSupplementaryViewOfKind: UICollectionElementKindSectionFooter, withReuseIdentifier: "footer")
+        collectionView?.register(UICollectionReusableView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: "header")
+        collectionView?.register(UICollectionReusableView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionFooter, withReuseIdentifier: "footer")
     }
     
     override func numberOfSections(in collectionView: UICollectionView) -> Int {
@@ -43,7 +43,7 @@ class CollectionViewController: UICollectionViewController {
     }
     
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        collectionView.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: true)
+        collectionView.scrollToItem(at: indexPath, at: UICollectionView.ScrollPosition.centeredHorizontally, animated: true)
     }
 }
 
@@ -58,14 +58,14 @@ extension CollectionViewController: UICollectionViewDelegateFlowLayout {
     
     override func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
         var identifier = "header"
-        if kind == UICollectionElementKindSectionFooter {
+        if kind == UICollectionView.elementKindSectionFooter {
             identifier = "footer"
         }
         
         let supplementaryView = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: identifier, for: indexPath)
         supplementaryView.backgroundColor = UIColor.lightGray
         let label = supplementaryView.viewWithTag(99) as? UILabel ?? UILabel(frame: supplementaryView.bounds)
-        label.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        label.autoresizingMask = [UIView.AutoresizingMask.flexibleWidth, UIView.AutoresizingMask.flexibleHeight]
         label.textAlignment = .center
         label.text = identifier
         
