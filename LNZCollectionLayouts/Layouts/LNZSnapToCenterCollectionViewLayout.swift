@@ -162,8 +162,11 @@ open class LNZSnapToCenterCollectionViewLayout: UICollectionViewLayout, FocusedC
         if resetOffset {
             resetOffset = false
             
-            let currentInFocusXOffset = (itemSize.width + interitemSpacing) * CGFloat(currentInFocus)
-            
+            var currentInFocusXOffset = (itemSize.width + interitemSpacing) * CGFloat(currentInFocus)
+            if !centerFirstItem {
+                currentInFocusXOffset = min(currentInFocusXOffset, collection.contentSize.width - collection.bounds.width - collection.contentInset.right)
+            }
+
             let proposedOffset = CGPoint(x: currentInFocusXOffset, y: -collection.contentInset.top)
             collection.contentOffset = proposedOffset
         }
