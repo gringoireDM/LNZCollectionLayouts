@@ -24,6 +24,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		500BC39321E8AD4C00BA39F2 /* LNZCollectionLayouts.podspec */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = LNZCollectionLayouts.podspec; sourceTree = "<group>"; };
 		500D6EFA1F1E1CFD00FE20D4 /* LNZCollectionLayouts.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LNZCollectionLayouts.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		500D6EFD1F1E1CFD00FE20D4 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		500D6EFF1F1E1CFD00FE20D4 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -56,6 +57,7 @@
 		500D6EF11F1E1CFC00FE20D4 = {
 			isa = PBXGroup;
 			children = (
+				500BC39321E8AD4C00BA39F2 /* LNZCollectionLayouts.podspec */,
 				500D6EFC1F1E1CFD00FE20D4 /* LNZCollectionLayouts */,
 				500D6EFB1F1E1CFD00FE20D4 /* Products */,
 			);

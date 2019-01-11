@@ -106,7 +106,7 @@ open class LNZInfiniteCollectionViewLayout: LNZSnapToCenterCollectionViewLayout 
         //we just have to shift all to go to cycleStart and remove the section inset
         let currentInFocusXOffset = cycleStart + collection.contentOffset.x - sectionInsetLeft
         
-        let proposedOffset = CGPoint(x: currentInFocusXOffset, y: -collection.contentInset.top)
+        let proposedOffset = CGPoint(x: currentInFocusXOffset, y: collection.contentOffset.y)
         collection.contentOffset = proposedOffset
     }
     

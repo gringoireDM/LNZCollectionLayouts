@@ -14,6 +14,8 @@ class CollectionViewController: UICollectionViewController {
         
         collectionView?.register(UICollectionReusableView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: "header")
         collectionView?.register(UICollectionReusableView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionFooter, withReuseIdentifier: "footer")
+        
+        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "ReloadData", style: .plain, target: collectionView, action: #selector(UICollectionView.reloadData))
     }
     
     override func numberOfSections(in collectionView: UICollectionView) -> Int {
@@ -37,9 +39,13 @@ class CollectionViewController: UICollectionViewController {
     }
     
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
-        coordinator.animate(alongsideTransition: { (coord) in
+        coordinator.animate(alongsideTransition: nil, completion: { _ in
+            if let currentFocused = (self.collectionView?.collectionViewLayout as? FocusedContaining)?.currentInFocus {
+                let indexPath = IndexPath(item: currentFocused, section: 0)
+                self.collectionView.scrollToItem(at: indexPath, at: UICollectionView.ScrollPosition.centeredHorizontally, animated: false)
+            }
             self.collectionView?.collectionViewLayout.invalidateLayout()
-        }, completion: nil)
+        })
     }
     
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {

@@ -161,10 +161,14 @@ open class LNZSnapToCenterCollectionViewLayout: UICollectionViewLayout, FocusedC
         
         if resetOffset {
             resetOffset = false
+            let endOffset = collection.contentSize.width - collection.bounds.width
+            guard centerFirstItem ||
+                (collection.contentOffset.x > 0 && collection.contentOffset.x < endOffset)  else { return }
             
-            let currentInFocusXOffset = (itemSize.width + interitemSpacing) * CGFloat(currentInFocus)
+            let centerInFocusXOffset = frameForItem(at: IndexPath(item: currentInFocus, section: 0)).midX
+            let centeredInFocusXOffset = centerInFocusXOffset - collection.bounds.width/2
+            let proposedOffset = CGPoint(x: centeredInFocusXOffset, y: collection.contentOffset.y)
             
-            let proposedOffset = CGPoint(x: currentInFocusXOffset, y: -collection.contentInset.top)
             collection.contentOffset = proposedOffset
         }
     }
@@ -339,7 +343,6 @@ open class LNZSnapToCenterCollectionViewLayout: UICollectionViewLayout, FocusedC
     
     open override func invalidationContext(forBoundsChange newBounds: CGRect) -> UICollectionViewLayoutInvalidationContext {
         let delta = CGSize(width: newBounds.width - currentCollectionSize.width, height: newBounds.height - currentCollectionSize.height)
-        
         let context = super.invalidationContext(forBoundsChange: newBounds)
         context.contentSizeAdjustment = delta
         return context
