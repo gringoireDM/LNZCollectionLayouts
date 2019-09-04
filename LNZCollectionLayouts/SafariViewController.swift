@@ -78,7 +78,7 @@ extension SafariViewController: UIViewControllerTransitioningDelegate {
     
     func animationController(forDismissed dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {
         guard let element = (dismissed as? SafariModalViewController)?.presentedElement,
-            let item = elements.index(of: element) else { return nil }
+            let item = elements.firstIndex(of: element) else { return nil }
         let indexPath = IndexPath(item: item, section: 0)
         let animator = (collectionView?.collectionViewLayout as? LNZSafariLayout)?.animator(forItem: indexPath)
         animator?.reversed = true
