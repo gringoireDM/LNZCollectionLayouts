@@ -144,7 +144,7 @@ open class LNZInfiniteCollectionViewLayout: LNZSnapToCenterCollectionViewLayout 
             let relativInitialX = currentX - cycleFrame.origin.x
             let relativeFinalX = min(cycleFrame.maxX, rect.maxX) - cycleFrame.origin.x
             
-            let firstIndex = Int(floor(relativInitialX/(itemSize.width + interitemSpacing)))
+            let firstIndex = min(Int(floor(relativInitialX/(itemSize.width + interitemSpacing))), itemCount-1)
             let lastIndex = min(Int(floor(relativeFinalX/(itemSize.width + interitemSpacing))), itemCount-1)
             
             for j in firstIndex...lastIndex {
