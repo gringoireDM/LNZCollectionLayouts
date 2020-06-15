@@ -12,20 +12,53 @@
 		500D6F031F1E1CFD00FE20D4 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 500D6F011F1E1CFD00FE20D4 /* Main.storyboard */; };
 		500D6F051F1E1CFD00FE20D4 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 500D6F041F1E1CFD00FE20D4 /* Assets.xcassets */; };
 		500D6F081F1E1CFD00FE20D4 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 500D6F061F1E1CFD00FE20D4 /* LaunchScreen.storyboard */; };
-		500D6F111F1E1D3D00FE20D4 /* LNZInfiniteCollectionViewLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 500D6F101F1E1D3D00FE20D4 /* LNZInfiniteCollectionViewLayout.swift */; };
 		500D6F131F1E32B000FE20D4 /* CollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 500D6F121F1E32B000FE20D4 /* CollectionViewController.swift */; };
-		500D6F181F1E6E5100FE20D4 /* LNZCarouselCollectionViewLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 500D6F161F1E6E0000FE20D4 /* LNZCarouselCollectionViewLayout.swift */; };
-		501CF9F31FBFABBD003CAC14 /* SafariAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 501CF9F21FBFABBD003CAC14 /* SafariAnimator.swift */; };
 		501CF9F51FC0AEC3003CAC14 /* SafariModalViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 501CF9F41FC0AEC3003CAC14 /* SafariModalViewController.swift */; };
-		5025EE8F1F42EA6C001521F6 /* LNZSafariTabLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5025EE8E1F42EA6C001521F6 /* LNZSafariTabLayout.swift */; };
 		5025EE931F43070A001521F6 /* SafariViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5025EE921F43070A001521F6 /* SafariViewController.swift */; };
-		50377DA41F574FFB00A567D6 /* LNZSnapToCenterCollectionViewLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 500D6F141F1E3D7000FE20D4 /* LNZSnapToCenterCollectionViewLayout.swift */; };
-		508E11771F5D585200895B7D /* UICollectionViewDelegateSafariLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 508E11761F5D585200895B7D /* UICollectionViewDelegateSafariLayout.swift */; };
+		D8B060322497FB0B00FCAA75 /* LNZCollectionLayouts.h in Headers */ = {isa = PBXBuildFile; fileRef = D8B060302497FB0B00FCAA75 /* LNZCollectionLayouts.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D8B060352497FB0B00FCAA75 /* LNZCollectionLayouts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D8B0602E2497FB0B00FCAA75 /* LNZCollectionLayouts.framework */; };
+		D8B060362497FB0B00FCAA75 /* LNZCollectionLayouts.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = D8B0602E2497FB0B00FCAA75 /* LNZCollectionLayouts.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		D8B0603B2497FB3600FCAA75 /* SafariAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 501CF9F21FBFABBD003CAC14 /* SafariAnimator.swift */; };
+		D8B0603C2497FB3900FCAA75 /* UICollectionViewDelegateSafariLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 508E11761F5D585200895B7D /* UICollectionViewDelegateSafariLayout.swift */; };
+		D8B0603D2497FB3C00FCAA75 /* LNZSnapToCenterCollectionViewLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 500D6F141F1E3D7000FE20D4 /* LNZSnapToCenterCollectionViewLayout.swift */; };
+		D8B0603E2497FB3E00FCAA75 /* LNZSafariTabLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5025EE8E1F42EA6C001521F6 /* LNZSafariTabLayout.swift */; };
+		D8B0603F2497FB4100FCAA75 /* LNZCarouselCollectionViewLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 500D6F161F1E6E0000FE20D4 /* LNZCarouselCollectionViewLayout.swift */; };
+		D8B060402497FB4300FCAA75 /* LNZInfiniteCollectionViewLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 500D6F101F1E1D3D00FE20D4 /* LNZInfiniteCollectionViewLayout.swift */; };
+		D8B060412497FC8F00FCAA75 /* SafariAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 501CF9F21FBFABBD003CAC14 /* SafariAnimator.swift */; };
+		D8B060422497FC9100FCAA75 /* UICollectionViewDelegateSafariLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 508E11761F5D585200895B7D /* UICollectionViewDelegateSafariLayout.swift */; };
+		D8B060432497FC9400FCAA75 /* LNZSnapToCenterCollectionViewLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 500D6F141F1E3D7000FE20D4 /* LNZSnapToCenterCollectionViewLayout.swift */; };
+		D8B060442497FC9600FCAA75 /* LNZInfiniteCollectionViewLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 500D6F101F1E1D3D00FE20D4 /* LNZInfiniteCollectionViewLayout.swift */; };
+		D8B060452497FC9800FCAA75 /* LNZCarouselCollectionViewLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 500D6F161F1E6E0000FE20D4 /* LNZCarouselCollectionViewLayout.swift */; };
+		D8B060462497FC9A00FCAA75 /* LNZSafariTabLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5025EE8E1F42EA6C001521F6 /* LNZSafariTabLayout.swift */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		D8B060332497FB0B00FCAA75 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 500D6EF21F1E1CFC00FE20D4 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = D8B0602D2497FB0B00FCAA75;
+			remoteInfo = LNZCollectionLayouts;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		D8B0603A2497FB0B00FCAA75 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				D8B060362497FB0B00FCAA75 /* LNZCollectionLayouts.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		500BC39321E8AD4C00BA39F2 /* LNZCollectionLayouts.podspec */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = LNZCollectionLayouts.podspec; sourceTree = "<group>"; };
-		500D6EFA1F1E1CFD00FE20D4 /* LNZCollectionLayouts.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LNZCollectionLayouts.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		500D6EFA1F1E1CFD00FE20D4 /* LNZCollectionLayoutsApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LNZCollectionLayoutsApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		500D6EFD1F1E1CFD00FE20D4 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		500D6EFF1F1E1CFD00FE20D4 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		500D6F021F1E1CFD00FE20D4 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -41,10 +74,21 @@
 		5025EE8E1F42EA6C001521F6 /* LNZSafariTabLayout.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LNZSafariTabLayout.swift; sourceTree = "<group>"; };
 		5025EE921F43070A001521F6 /* SafariViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SafariViewController.swift; sourceTree = "<group>"; };
 		508E11761F5D585200895B7D /* UICollectionViewDelegateSafariLayout.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UICollectionViewDelegateSafariLayout.swift; sourceTree = "<group>"; };
+		D8B0602E2497FB0B00FCAA75 /* LNZCollectionLayouts.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = LNZCollectionLayouts.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		D8B060302497FB0B00FCAA75 /* LNZCollectionLayouts.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LNZCollectionLayouts.h; sourceTree = "<group>"; };
+		D8B060312497FB0B00FCAA75 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
 		500D6EF71F1E1CFD00FE20D4 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D8B060352497FB0B00FCAA75 /* LNZCollectionLayouts.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D8B0602B2497FB0B00FCAA75 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -59,6 +103,7 @@
 			children = (
 				500BC39321E8AD4C00BA39F2 /* LNZCollectionLayouts.podspec */,
 				500D6EFC1F1E1CFD00FE20D4 /* LNZCollectionLayouts */,
+				D8B0602F2497FB0B00FCAA75 /* LNZCollectionLayouts */,
 				500D6EFB1F1E1CFD00FE20D4 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -66,7 +111,8 @@
 		500D6EFB1F1E1CFD00FE20D4 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				500D6EFA1F1E1CFD00FE20D4 /* LNZCollectionLayouts.app */,
+				500D6EFA1F1E1CFD00FE20D4 /* LNZCollectionLayoutsApp.app */,
+				D8B0602E2497FB0B00FCAA75 /* LNZCollectionLayouts.framework */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -117,16 +163,56 @@
 			path = CustomDelegates;
 			sourceTree = "<group>";
 		};
+		D8B0602F2497FB0B00FCAA75 /* LNZCollectionLayouts */ = {
+			isa = PBXGroup;
+			children = (
+				D8B060302497FB0B00FCAA75 /* LNZCollectionLayouts.h */,
+				D8B060312497FB0B00FCAA75 /* Info.plist */,
+			);
+			path = LNZCollectionLayouts;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
+/* Begin PBXHeadersBuildPhase section */
+		D8B060292497FB0B00FCAA75 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D8B060322497FB0B00FCAA75 /* LNZCollectionLayouts.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
 /* Begin PBXNativeTarget section */
-		500D6EF91F1E1CFD00FE20D4 /* LNZCollectionLayouts */ = {
+		500D6EF91F1E1CFD00FE20D4 /* LNZCollectionLayoutsApp */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 500D6F0C1F1E1CFD00FE20D4 /* Build configuration list for PBXNativeTarget "LNZCollectionLayouts" */;
+			buildConfigurationList = 500D6F0C1F1E1CFD00FE20D4 /* Build configuration list for PBXNativeTarget "LNZCollectionLayoutsApp" */;
 			buildPhases = (
 				500D6EF61F1E1CFD00FE20D4 /* Sources */,
 				500D6EF71F1E1CFD00FE20D4 /* Frameworks */,
 				500D6EF81F1E1CFD00FE20D4 /* Resources */,
+				D8B0603A2497FB0B00FCAA75 /* Embed Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				D8B060342497FB0B00FCAA75 /* PBXTargetDependency */,
+			);
+			name = LNZCollectionLayoutsApp;
+			productName = LNZCollectionLayouts;
+			productReference = 500D6EFA1F1E1CFD00FE20D4 /* LNZCollectionLayoutsApp.app */;
+			productType = "com.apple.product-type.application";
+		};
+		D8B0602D2497FB0B00FCAA75 /* LNZCollectionLayouts */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = D8B060372497FB0B00FCAA75 /* Build configuration list for PBXNativeTarget "LNZCollectionLayouts" */;
+			buildPhases = (
+				D8B060292497FB0B00FCAA75 /* Headers */,
+				D8B0602A2497FB0B00FCAA75 /* Sources */,
+				D8B0602B2497FB0B00FCAA75 /* Frameworks */,
+				D8B0602C2497FB0B00FCAA75 /* Resources */,
 			);
 			buildRules = (
 			);
@@ -134,8 +220,8 @@
 			);
 			name = LNZCollectionLayouts;
 			productName = LNZCollectionLayouts;
-			productReference = 500D6EFA1F1E1CFD00FE20D4 /* LNZCollectionLayouts.app */;
-			productType = "com.apple.product-type.application";
+			productReference = D8B0602E2497FB0B00FCAA75 /* LNZCollectionLayouts.framework */;
+			productType = "com.apple.product-type.framework";
 		};
 /* End PBXNativeTarget section */
 
@@ -144,13 +230,18 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 0830;
-				LastUpgradeCheck = 0930;
+				LastUpgradeCheck = 1150;
 				ORGANIZATIONNAME = Gilt;
 				TargetAttributes = {
 					500D6EF91F1E1CFD00FE20D4 = {
 						CreatedOnToolsVersion = 8.3.3;
 						DevelopmentTeam = ZJ8CN8P2Z5;
 						LastSwiftMigration = 1030;
+						ProvisioningStyle = Automatic;
+					};
+					D8B0602D2497FB0B00FCAA75 = {
+						CreatedOnToolsVersion = 11.5;
+						DevelopmentTeam = ZJ8CN8P2Z5;
 						ProvisioningStyle = Automatic;
 					};
 				};
@@ -160,6 +251,7 @@
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
+				English,
 				en,
 				Base,
 			);
@@ -168,7 +260,8 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				500D6EF91F1E1CFD00FE20D4 /* LNZCollectionLayouts */,
+				500D6EF91F1E1CFD00FE20D4 /* LNZCollectionLayoutsApp */,
+				D8B0602D2497FB0B00FCAA75 /* LNZCollectionLayouts */,
 			);
 		};
 /* End PBXProject section */
@@ -184,6 +277,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		D8B0602C2497FB0B00FCAA75 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -191,21 +291,42 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D8B060412497FC8F00FCAA75 /* SafariAnimator.swift in Sources */,
 				500D6F131F1E32B000FE20D4 /* CollectionViewController.swift in Sources */,
+				D8B060462497FC9A00FCAA75 /* LNZSafariTabLayout.swift in Sources */,
 				501CF9F51FC0AEC3003CAC14 /* SafariModalViewController.swift in Sources */,
+				D8B060432497FC9400FCAA75 /* LNZSnapToCenterCollectionViewLayout.swift in Sources */,
+				D8B060442497FC9600FCAA75 /* LNZInfiniteCollectionViewLayout.swift in Sources */,
+				D8B060422497FC9100FCAA75 /* UICollectionViewDelegateSafariLayout.swift in Sources */,
 				500D6F001F1E1CFD00FE20D4 /* ViewController.swift in Sources */,
+				D8B060452497FC9800FCAA75 /* LNZCarouselCollectionViewLayout.swift in Sources */,
 				5025EE931F43070A001521F6 /* SafariViewController.swift in Sources */,
-				508E11771F5D585200895B7D /* UICollectionViewDelegateSafariLayout.swift in Sources */,
-				50377DA41F574FFB00A567D6 /* LNZSnapToCenterCollectionViewLayout.swift in Sources */,
-				500D6F111F1E1D3D00FE20D4 /* LNZInfiniteCollectionViewLayout.swift in Sources */,
-				500D6F181F1E6E5100FE20D4 /* LNZCarouselCollectionViewLayout.swift in Sources */,
 				500D6EFE1F1E1CFD00FE20D4 /* AppDelegate.swift in Sources */,
-				501CF9F31FBFABBD003CAC14 /* SafariAnimator.swift in Sources */,
-				5025EE8F1F42EA6C001521F6 /* LNZSafariTabLayout.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D8B0602A2497FB0B00FCAA75 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D8B0603B2497FB3600FCAA75 /* SafariAnimator.swift in Sources */,
+				D8B060402497FB4300FCAA75 /* LNZInfiniteCollectionViewLayout.swift in Sources */,
+				D8B0603C2497FB3900FCAA75 /* UICollectionViewDelegateSafariLayout.swift in Sources */,
+				D8B0603F2497FB4100FCAA75 /* LNZCarouselCollectionViewLayout.swift in Sources */,
+				D8B0603E2497FB3E00FCAA75 /* LNZSafariTabLayout.swift in Sources */,
+				D8B0603D2497FB3C00FCAA75 /* LNZSnapToCenterCollectionViewLayout.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		D8B060342497FB0B00FCAA75 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = D8B0602D2497FB0B00FCAA75 /* LNZCollectionLayouts */;
+			targetProxy = D8B060332497FB0B00FCAA75 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
 		500D6F011F1E1CFD00FE20D4 /* Main.storyboard */ = {
@@ -231,6 +352,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
@@ -290,6 +412,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
@@ -341,12 +464,14 @@
 		500D6F0D1F1E1CFD00FE20D4 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				DEVELOPMENT_TEAM = ZJ8CN8P2Z5;
-				INFOPLIST_FILE = LNZCollectionLayouts/Info.plist;
+				INFOPLIST_FILE = LNZCollectionLayouts/AppInfo.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.gilt.LNZCollectionLayouts;
+				MARKETING_VERSION = 1.2.3;
+				PRODUCT_BUNDLE_IDENTIFIER = com.gilt.LNZCollectionLayoutsApp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 			};
@@ -355,14 +480,77 @@
 		500D6F0E1F1E1CFD00FE20D4 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				DEVELOPMENT_TEAM = ZJ8CN8P2Z5;
-				INFOPLIST_FILE = LNZCollectionLayouts/Info.plist;
+				INFOPLIST_FILE = LNZCollectionLayouts/AppInfo.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.gilt.LNZCollectionLayouts;
+				MARKETING_VERSION = 1.2.3;
+				PRODUCT_BUNDLE_IDENTIFIER = com.gilt.LNZCollectionLayoutsApp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+		D8B060382497FB0B00FCAA75 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = ZJ8CN8P2Z5;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				INFOPLIST_FILE = LNZCollectionLayouts/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MARKETING_VERSION = 1.2.3;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.gilt.LNZCollectionLayouts;
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Debug;
+		};
+		D8B060392497FB0B00FCAA75 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = ZJ8CN8P2Z5;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				INFOPLIST_FILE = LNZCollectionLayouts/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MARKETING_VERSION = 1.2.3;
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.gilt.LNZCollectionLayouts;
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
 			};
 			name = Release;
 		};
@@ -378,11 +566,20 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		500D6F0C1F1E1CFD00FE20D4 /* Build configuration list for PBXNativeTarget "LNZCollectionLayouts" */ = {
+		500D6F0C1F1E1CFD00FE20D4 /* Build configuration list for PBXNativeTarget "LNZCollectionLayoutsApp" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				500D6F0D1F1E1CFD00FE20D4 /* Debug */,
 				500D6F0E1F1E1CFD00FE20D4 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		D8B060372497FB0B00FCAA75 /* Build configuration list for PBXNativeTarget "LNZCollectionLayouts" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D8B060382497FB0B00FCAA75 /* Debug */,
+				D8B060392497FB0B00FCAA75 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

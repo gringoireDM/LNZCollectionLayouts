@@ -374,13 +374,15 @@ public class LNZSafariLayout: UICollectionViewLayout, UIGestureRecognizerDelegat
             invalidationContext.interactivelyDeletingIndexPaths = nil
             
             invalidateLayout(with: invalidationContext)
+        @unknown default:
+            break
         }
     }
 }
 
 // MARK: - Animator -
 public extension LNZSafariLayout {
-    public func animator(forItem indexPath: IndexPath) -> SafariAnimator {
+    func animator(forItem indexPath: IndexPath) -> SafariAnimator {
         let animator = SafariAnimator(presentingIndexPath: indexPath) {[weak self] (origin, size, angle) -> CATransform3D in
             guard let `self` = self else { return CATransform3DIdentity }
             return self.final3dTransform(forItemOrigin: origin, andSize: size, enforcingAngle: angle)
