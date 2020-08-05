@@ -30,6 +30,7 @@
 		D8B060442497FC9600FCAA75 /* LNZInfiniteCollectionViewLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 500D6F101F1E1D3D00FE20D4 /* LNZInfiniteCollectionViewLayout.swift */; };
 		D8B060452497FC9800FCAA75 /* LNZCarouselCollectionViewLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 500D6F161F1E6E0000FE20D4 /* LNZCarouselCollectionViewLayout.swift */; };
 		D8B060462497FC9A00FCAA75 /* LNZSafariTabLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5025EE8E1F42EA6C001521F6 /* LNZSafariTabLayout.swift */; };
+		D8C20A0B24DAFE5400731371 /* AppInfo.plist in Resources */ = {isa = PBXBuildFile; fileRef = D8C20A0A24DAFE5400731371 /* AppInfo.plist */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -64,7 +65,6 @@
 		500D6F021F1E1CFD00FE20D4 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		500D6F041F1E1CFD00FE20D4 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		500D6F071F1E1CFD00FE20D4 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
-		500D6F091F1E1CFD00FE20D4 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		500D6F101F1E1D3D00FE20D4 /* LNZInfiniteCollectionViewLayout.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LNZInfiniteCollectionViewLayout.swift; sourceTree = "<group>"; };
 		500D6F121F1E32B000FE20D4 /* CollectionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CollectionViewController.swift; sourceTree = "<group>"; };
 		500D6F141F1E3D7000FE20D4 /* LNZSnapToCenterCollectionViewLayout.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LNZSnapToCenterCollectionViewLayout.swift; sourceTree = "<group>"; };
@@ -77,6 +77,7 @@
 		D8B0602E2497FB0B00FCAA75 /* LNZCollectionLayouts.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = LNZCollectionLayouts.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D8B060302497FB0B00FCAA75 /* LNZCollectionLayouts.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LNZCollectionLayouts.h; sourceTree = "<group>"; };
 		D8B060312497FB0B00FCAA75 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		D8C20A0A24DAFE5400731371 /* AppInfo.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = AppInfo.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -129,7 +130,7 @@
 				500D6F011F1E1CFD00FE20D4 /* Main.storyboard */,
 				500D6F041F1E1CFD00FE20D4 /* Assets.xcassets */,
 				500D6F061F1E1CFD00FE20D4 /* LaunchScreen.storyboard */,
-				500D6F091F1E1CFD00FE20D4 /* Info.plist */,
+				D8C20A0A24DAFE5400731371 /* AppInfo.plist */,
 			);
 			path = LNZCollectionLayouts;
 			sourceTree = "<group>";
@@ -271,6 +272,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D8C20A0B24DAFE5400731371 /* AppInfo.plist in Resources */,
 				500D6F081F1E1CFD00FE20D4 /* LaunchScreen.storyboard in Resources */,
 				500D6F051F1E1CFD00FE20D4 /* Assets.xcassets in Resources */,
 				500D6F031F1E1CFD00FE20D4 /* Main.storyboard in Resources */,
