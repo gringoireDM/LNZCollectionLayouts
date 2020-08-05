@@ -14,9 +14,9 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "D8B0602D2497FB0B00FCAA75"
-               BuildableName = "LNZCollectionLayouts.framework"
-               BlueprintName = "LNZCollectionLayouts"
+               BlueprintIdentifier = "500D6EF91F1E1CFD00FE20D4"
+               BuildableName = "LNZCollectionLayoutsApp.app"
+               BlueprintName = "LNZCollectionLayoutsApp"
                ReferencedContainer = "container:LNZCollectionLayouts.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -40,6 +40,16 @@
       debugDocumentVersioning = "YES"
       debugServiceExtension = "internal"
       allowLocationSimulation = "YES">
+      <BuildableProductRunnable
+         runnableDebuggingMode = "0">
+         <BuildableReference
+            BuildableIdentifier = "primary"
+            BlueprintIdentifier = "500D6EF91F1E1CFD00FE20D4"
+            BuildableName = "LNZCollectionLayoutsApp.app"
+            BlueprintName = "LNZCollectionLayoutsApp"
+            ReferencedContainer = "container:LNZCollectionLayouts.xcodeproj">
+         </BuildableReference>
+      </BuildableProductRunnable>
    </LaunchAction>
    <ProfileAction
       buildConfiguration = "Release"
@@ -47,15 +57,16 @@
       savedToolIdentifier = ""
       useCustomWorkingDirectory = "NO"
       debugDocumentVersioning = "YES">
-      <MacroExpansion>
+      <BuildableProductRunnable
+         runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "D8B0602D2497FB0B00FCAA75"
-            BuildableName = "LNZCollectionLayouts.framework"
-            BlueprintName = "LNZCollectionLayouts"
+            BlueprintIdentifier = "500D6EF91F1E1CFD00FE20D4"
+            BuildableName = "LNZCollectionLayoutsApp.app"
+            BlueprintName = "LNZCollectionLayoutsApp"
             ReferencedContainer = "container:LNZCollectionLayouts.xcodeproj">
          </BuildableReference>
-      </MacroExpansion>
+      </BuildableProductRunnable>
    </ProfileAction>
    <AnalyzeAction
       buildConfiguration = "Debug">
