@@ -32,6 +32,9 @@ open class LNZCarouselCollectionViewLayout: LNZInfiniteCollectionViewLayout {
     ///to the distance of its center to the collection's center.
     @IBInspectable public var minimumScaleFactor: CGFloat = 0.85
     
+    ///The minimum value of alpha for items not in focus.
+    @IBInspectable public var sideItemAlpha: CGFloat = 1.0
+    
     //MARK: - Utility properties
     
     override var canInfiniteScroll: Bool { return super.canInfiniteScroll && isInfiniteScrollEnabled }
@@ -63,6 +66,10 @@ open class LNZCarouselCollectionViewLayout: LNZInfiniteCollectionViewLayout {
         //property.
         attributes.zIndex = Int(scale * 100000)
         attributes.transform3D = CATransform3DScale(CATransform3DIdentity, scale, scale, 1)
+        
+        if sideItemAlpha != 1.0 {
+            shouldChangeAlpha(collection, attributes: attributes)
+        }
     }
     
     open override func layoutAttributesForElements(in rect: CGRect) -> [UICollectionViewLayoutAttributes]? {
@@ -83,5 +90,19 @@ open class LNZCarouselCollectionViewLayout: LNZInfiniteCollectionViewLayout {
         guard let attribute = super.layoutAttributesForItem(at: indexPath) else { return nil }
         configureAttributes(for: attribute)
         return attribute
+    }
+    
+    private func shouldChangeAlpha(_ collectionView: UICollectionView, attributes: UICollectionViewLayoutAttributes) {
+        let collectionCenter = collectionView.frame.size.width / 2
+        let offset = collectionView.contentOffset.x
+        let normalizedCenter = attributes.center.x - offset
+        
+        let maxDistance = self.itemSize.width
+        let distance = min(abs(collectionCenter - normalizedCenter), maxDistance)
+        let ratio = (maxDistance - distance) / maxDistance
+        
+        let alpha = ratio * (1 - self.sideItemAlpha) + self.sideItemAlpha
+        
+        focusChangeDelegate?.didChangeAlpha(alpha, for: attributes.indexPath)
     }
 }
