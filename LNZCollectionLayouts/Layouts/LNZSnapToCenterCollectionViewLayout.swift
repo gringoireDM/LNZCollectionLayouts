@@ -10,7 +10,7 @@ import UIKit
 
 ///This methods will be called on the delegate whenever a centered element is changing. In fact as element in focus is to be intended
 ///as element currently centered
-@objc public protocol FocusChangeDelegate: class {
+@objc public protocol FocusChangeDelegate: AnyObject {
     ///This method will signal to the delegate that the element in focus will change.
     ///- parameter container: The object that is tracking the focused element
     ///- parameter inFocus: The element currently in focus (before the change)
@@ -24,7 +24,7 @@ import UIKit
 }
 
 ///An object conforming FocusContaining will track elements in focus in a collection and will alert the delegate for changes-
-@objc public protocol FocusedContaining: class {
+@objc public protocol FocusedContaining: AnyObject {
     ///The element currently in focus
     var currentInFocus: Int { get }
     
